@@ -1,0 +1,25 @@
+## PROJECT::GENERAL
+.yardoc
+coverage
+doc
+rdoc
+log
+websites
+
+## BUNDLER
+*.gem
+.bundle
+pkg
+Gemfile.lock
+
+## RBENV
+.ruby-version
+.rbenv*
+
+## RCOV
+coverage.data
+
+tmp
+
+## RUBINIUS
+*.rbc
