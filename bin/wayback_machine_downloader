@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'wayback_machine_downloader'
+puts WaybackMachineDownloader.hi(ARGV[0])
