@@ -1,5 +1,5 @@
 class WaybackMachineDownloader
-  def self.hi
-    puts "Hello world!"
+  def self.hi name
+    puts "Hello world! #{name}"
   end
 end
