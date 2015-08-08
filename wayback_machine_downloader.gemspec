@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "wayback_machine_downloader"
-  s.version     = "0.1.1"
+  s.version     = "0.1.2"
   s.executables << "wayback_machine_downloader"
   s.date        = "2015-07-25"
   s.summary     = "Download any website from the Wayback Machine."
@@ -10,4 +10,6 @@ Gem::Specification.new do |s|
   s.files       = ["lib/wayback_machine_downloader.rb"]
   s.homepage    = "https://github.com/hartator/wayback_machine_downloader"
   s.license     = "MIT"
+  s.add_development_dependency 'pry-rescue', '~> 1.4'
+  s.add_development_dependency 'pry-stack_explorer', '~> 0.4'
 end
