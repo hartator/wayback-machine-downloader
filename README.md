@@ -10,11 +10,13 @@ You need to install Ruby on your system - if you don't already have it, then run
 
 ## Usage 
 
+### Basic
+
 Pass the base url of the website you want to retrieve as an argument (e.g., http://example.com):
 
     wayback_machine_downloader http://example.com
 
-## How it works
+### How it works
 
 It will download the last version of every file present on Wayback Machine to `websites/example.com/`. It will also re-create a directory structure and auto-create `index.html` pages to work seamlessly with Apache and Nginx. URLs and links structure are preserved as much as possible.
 
@@ -24,7 +26,7 @@ You may want to supply a specific timestamp to lock your backup to an older vers
 
     wayback_machine_downloader http://example.com` --timestamp 20060716231334
 
-## Contributing
+### Contributing
 
 Contributions are welcome! Just submit a pull request via GitHub.
 
