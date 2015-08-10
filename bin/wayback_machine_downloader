@@ -22,6 +22,6 @@ if base_url = ARGV[0]
   wayback_machine_downloader = WaybackMachineDownloader.new base_url: base_url, timestamp: options[:timestamp]
   wayback_machine_downloader.download_files
 else
-  puts "You need to specify a websire to backup. (ie. http://example.com)"
+  puts "You need to specify a website to backup. (e.g., http://example.com)"
   puts "Run `wayback_machine_downloader --help` for more help."
 end
