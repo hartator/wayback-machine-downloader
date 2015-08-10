@@ -12,7 +12,7 @@ You need to install Ruby on your system - if you don't already have it, then run
 
 ### Basic
 
-Run wayback_machine_downloader with the base url of the website you want to retrieve as a parameter:
+Run wayback_machine_downloader with the base url of the website you want to retrieve as a parameter (e.g., http://example.com):
 
     wayback_machine_downloader http://example.com
 
@@ -20,7 +20,7 @@ Run wayback_machine_downloader with the base url of the website you want to retr
 
 It will download the last version of every file present on Wayback Machine to `websites/example.com/`. It will also re-create a directory structure and auto-create `index.html` pages to work seamlessly with Apache and Nginx. URLs and links structure are preserved as much as possible.
 
-## Optional Timestamp
+### Optional Timestamp
 
 You may want to supply a specific timestamp to lock your backup to an older version of the website. Wayback Machine Downloader will then fetch only file versions on or prior to the timestamp specified:
 
