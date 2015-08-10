@@ -3,6 +3,8 @@ require 'fileutils'
 
 class WaybackMachineDownloader
 
+  VERSION = "0.1.4"
+
   attr_accessor :base_url, :timestamp
 
   def initialize params
@@ -44,7 +46,9 @@ class WaybackMachineDownloader
     puts "Downlading #{@base_url} from Wayback Machine..."
     puts
     file_list_curated = get_file_list_curated
+    count = 0
     file_list_curated.each do |file_id, file_remote_info|
+      count += 1
       file_url = file_remote_info[:file_url]
       file_path_elements = file_id.split('/')
       if file_id == ""
@@ -52,13 +56,13 @@ class WaybackMachineDownloader
         file_path = backup_path + 'index.html'
       elsif file_url[-1] == '/' or not file_path_elements[-1].include? '.'
         dir_path = backup_path + file_path_elements[0..-1].join('/')
-        file_path = backup_path + file_path_elements[0..-1].join('/') + 'index.html'
+        file_path = backup_path + file_path_elements[0..-1].join('/') + '/index.html'
       else
         dir_path = backup_path + file_path_elements[0..-2].join('/')
         file_path = backup_path + file_path_elements[0..-1].join('/')
       end
       unless File.exists? file_path
-        FileUtils::mkdir_p dir_path unless File.exists? dir_path
+        structure_dir_path dir_path
         open(file_path, "wb") do |file|
           begin
             open("http://web.archive.org/web/#{timestamp}id_/#{file_url}") do |uri|
@@ -67,15 +71,33 @@ class WaybackMachineDownloader
           rescue OpenURI::HTTPError => e
             puts "#{file_url} # #{e}"
             file.write(e.io.read)
+          rescue Exception => e
+            puts "#{file_url} # #{e}"
           end
         end
-        puts "#{file_url} -> #{file_path}"
+        puts "#{file_url} -> #{file_path} (#{count}/#{file_list_curated.size})"
       else
-        puts "#{file_url} # #{file_path} already exists."
+        puts "#{file_url} # #{file_path} already exists. (#{count}/#{file_list_curated.size})"
       end
     end
     puts
-    puts "Download complete, saved in #{backup_path}. (#{file_list_curated.size} files downloaded)"
+    puts "Download complete, saved in #{backup_path}. (#{file_list_curated.size} files)"
+  end
+
+  def structure_dir_path dir_path
+    begin
+      FileUtils::mkdir_p dir_path unless File.exists? dir_path
+    rescue Errno::EEXIST => e
+      puts "# #{e}"
+      file_already_existing = e.to_s.split("File exists @ dir_s_mkdir - ")[-1]
+      file_already_existing_temporary = file_already_existing + '.temp'
+      file_already_existing_permanent = file_already_existing + '/index.html'
+      FileUtils::mv file_already_existing, file_already_existing_temporary
+      FileUtils::mkdir_p file_already_existing
+      FileUtils::mv file_already_existing_temporary, file_already_existing_permanent
+      puts "#{file_already_existing} ->  #{file_already_existing_permanent}"
+      structure_dir_path dir_path
+    end
   end
 
 end
