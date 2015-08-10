@@ -12,7 +12,7 @@ You need to install Ruby on your system - if you don't already have it, then run
 
 ### Basic
 
-Run wayback_machine_downloader with the base url of the website you want to retrieve as a parameter (e.g., http://example.com):
+Run wayback_machine_downloader with the base url of the website you want to retrieve as a parameter:
 
     wayback_machine_downloader http://example.com
 
