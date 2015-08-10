@@ -3,10 +3,11 @@ require 'fileutils'
 
 class WaybackMachineDownloader
 
-  attr_accessor :base_url
+  attr_accessor :base_url, :timestamp
 
   def initialize params
     @base_url = params[:base_url]
+    @timestamp = params[:timestamp]
   end
 
   def backup_name
@@ -17,7 +18,7 @@ class WaybackMachineDownloader
     'websites/' + backup_name + '/'
   end
 
-  def file_list_curated
+  def get_file_list_curated
     file_list_raw = open "http://web.archive.org/cdx/search/xd?url=#{@base_url}/*"
     file_list_curated = Hash.new
     file_list_raw.each_line do |line|
@@ -38,6 +39,9 @@ class WaybackMachineDownloader
   end
 
   def download_files
+    puts "Downlading #{@base_url} from Wayback Machine..."
+    puts
+    file_list_curated = get_file_list_curated
     file_list_curated.each do |file_id, file_remote_info|
       timestamp = file_remote_info[:timestamp]
       file_url = file_remote_info[:file_url]
@@ -45,7 +49,7 @@ class WaybackMachineDownloader
       if file_id == ""
         dir_path = backup_path
         file_path = backup_path + 'index.html'
-      elsif file_url[-1] == '/'
+      elsif file_url[-1] == '/' or not file_path_elements[-1].include? '.'
         dir_path = backup_path + file_path_elements[0..-1].join('/')
         file_path = backup_path + file_path_elements[0..-1].join('/') + 'index.html'
       else
@@ -60,7 +64,7 @@ class WaybackMachineDownloader
               file.write(uri.read)
             end
           rescue OpenURI::HTTPError => e
-            puts "#{file_url} # 404"
+            puts "#{file_url} # #{e}"
             file.write(e.io.read)
           end
         end
@@ -69,6 +73,8 @@ class WaybackMachineDownloader
         puts "#{file_url} # #{file_path} already exists."
       end
     end
+    puts
+    puts "Download complete, saved in #{backup_path}. (#{file_list_curated.size} files downloaded.)"
   end
 
 end
