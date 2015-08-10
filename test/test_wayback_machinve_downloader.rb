@@ -14,7 +14,7 @@ class WaybackMachineDownloaderTest < Minitest::Test
   end
 
   def test_file_list_curated
-    assert_equal 20081120203712, @wayback_machine_downloader.file_list_curated["linux.htm"][:timestamp]
+    assert_equal 20081120203712, @wayback_machine_downloader.get_file_list_curated["linux.htm"][:timestamp]
   end
 
   def test_file_download
