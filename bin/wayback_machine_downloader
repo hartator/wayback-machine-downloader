@@ -8,7 +8,7 @@ option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: wayback_machine_downloader http://example.com"
 
   opts.separator ""
-  opts.separator "Download a website from Wayback Machine."
+  opts.separator "Download any website from the Wayback Machine."
 
   opts.separator ""
   opts.separator "Optional option:"
