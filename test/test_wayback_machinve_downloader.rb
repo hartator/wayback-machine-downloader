@@ -3,7 +3,7 @@ require 'pry-rescue/minitest'
 require 'wayback_machine_downloader'
 
 
-class WaybackMachineDownloaderTest < Minitest::Unit::TestCase
+class WaybackMachineDownloaderTest < Minitest::Test
 
   def setup
     @wayback_machine_downloader = WaybackMachineDownloader.new base_url: 'http://www.onlyfreegames.net'
