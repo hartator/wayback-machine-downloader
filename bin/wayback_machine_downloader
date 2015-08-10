@@ -1,4 +1,27 @@
 #!/usr/bin/env ruby
 
 require 'wayback_machine_downloader'
-puts WaybackMachineDownloader.hi(ARGV[0])
+require 'optparse'
+
+options = {}
+option_parser = OptionParser.new do |opts|
+  opts.banner = "Usage: wayback_machine_downloader http://example.com"
+
+  opts.separator ""
+  opts.separator "Download a website from Wayback Machine."
+
+  opts.separator ""
+  opts.separator "Optional option:"
+
+  opts.on("-t", "--timestamp TIMESTAMP", Integer, "Only files on or before timestamp supplied (ie. 20150806225358)") do |t|
+    options[:timestamp] = t
+  end
+end.parse!
+
+if base_url = ARGV[0]
+  wayback_machine_downloader = WaybackMachineDownloader.new base_url: base_url, timestamp: options[:timestamp]
+  wayback_machine_downloader.download_files
+else
+  puts "You need to specify a websire to backup. (ie. http://example.com)"
+  puts "Run `wayback_machine_downloader --help` for more help."
+end
