@@ -4,11 +4,11 @@ Download any website from the Internet Archive Wayback Machine.
 
 ## Installation
 
-You need to install Ruby on your system - if you don't already have it, then run:
+You need to install Ruby on your system (>= 1.9.2) - if you don't already have it, then run:
 
     gem install wayback_machine_downloader
 
-## Usage 
+## Usage
 
 ### Basic
 

@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.files       = ["lib/wayback_machine_downloader.rb"]
   s.homepage    = "https://github.com/hartator/wayback_machine_downloader"
   s.license     = "MIT"
+  s.required_ruby_version = '>= 1.9.2'
   s.add_development_dependency 'pry-rescue', '~> 1.4'
   s.add_development_dependency 'pry-stack_explorer', '~> 0.4'
 end
