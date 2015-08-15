@@ -22,6 +22,15 @@ class WaybackMachineDownloaderTest < Minitest::Test
     assert_equal 20081120203712, @wayback_machine_downloader.get_file_list_curated["linux.htm"][:timestamp]
   end
 
+  def test_file_list_by_timestamp
+    file_expected = {
+      file_id: "Fs-06.jpg",
+      file_url: "http://www.onlyfreegames.net:80/Fs-06.jpg",
+      timestamp: 20060716125343
+    }
+    assert_equal file_expected, @wayback_machine_downloader.file_list_by_timestamp[-1]
+  end
+
   def test_file_download
     @wayback_machine_downloader.download_files
     linux_page = open 'websites/www.onlyfreegames.net/linux.htm'
