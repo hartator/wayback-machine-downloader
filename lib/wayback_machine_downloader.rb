@@ -3,7 +3,7 @@ require 'fileutils'
 
 class WaybackMachineDownloader
 
-  VERSION = "0.1.7"
+  VERSION = "0.1.8"
 
   attr_accessor :base_url, :timestamp
 
