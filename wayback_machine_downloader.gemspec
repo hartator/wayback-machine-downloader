@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.authors     = ["hartator"]
   s.email       = "hartator@gmail.com"
   s.files       = ["lib/wayback_machine_downloader.rb"]
-  s.homepage    = "https://github.com/hartator/wayback_machine_downloader"
+  s.homepage    = "https://github.com/hartator/wayback-machine-downloader"
   s.license     = "MIT"
   s.required_ruby_version = '>= 1.9.2'
   s.add_development_dependency 'pry-rescue', '~> 1.4'
