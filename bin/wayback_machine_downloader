@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'wayback_machine_downloader'
+require_relative '../lib/wayback_machine_downloader'
 require 'optparse'
 
 options = {}
