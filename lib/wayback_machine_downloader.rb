@@ -21,25 +21,37 @@ class WaybackMachineDownloader
   end
 
   def get_file_list_curated
-    file_list_raw = open "http://web.archive.org/cdx/search/xd?url=#{@base_url}/*"
+    index_file_list_raw =  open "http://web.archive.org/cdx/search/xd?url=#{@base_url}"
+    all_file_list_raw = open "http://web.archive.org/cdx/search/xd?url=#{@base_url}/*"
     file_list_curated = Hash.new
-    file_list_raw.each_line do |line|
-      line = line.split(' ')
-      file_timestamp = line[1].to_i
-      file_url = line[2]
-      file_id = file_url.split('/')[3..-1].join('/')
-      file_id = URI.unescape file_id
-      if @timestamp == 0 or file_timestamp <= @timestamp
-        if file_list_curated[file_id]
-          unless file_list_curated[file_id][:timestamp] > file_timestamp
+    [index_file_list_raw, all_file_list_raw].each do |file|
+      file.each_line do |line|
+        line = line.split(' ')
+        file_timestamp = line[1].to_i
+        file_url = line[2]
+        file_id = file_url.split('/')[3..-1].join('/')
+        file_id = URI.unescape file_id
+        if @timestamp == 0 or file_timestamp <= @timestamp
+          if file_list_curated[file_id]
+            unless file_list_curated[file_id][:timestamp] > file_timestamp
+              file_list_curated[file_id] = {file_url: file_url, timestamp: file_timestamp}
+            end
+          else
             file_list_curated[file_id] = {file_url: file_url, timestamp: file_timestamp}
           end
-        else
-          file_list_curated[file_id] = {file_url: file_url, timestamp: file_timestamp}
         end
       end
     end
     file_list_curated
+  end
+
+  def file_list_by_timestamp
+    file_list_curated = get_file_list_curated
+    file_list_curated = file_list_curated.sort_by { |k,v| v[:timestamp] }.reverse
+    file_list_curated.map do |file_remote_info|
+      file_remote_info[1][:file_id] = file_remote_info[0]
+      file_remote_info[1]
+    end
   end
 
   def download_files
@@ -47,9 +59,10 @@ class WaybackMachineDownloader
     puts
     file_list_curated = get_file_list_curated
     count = 0
-    file_list_curated.each do |file_id, file_remote_info|
+    file_list_by_timestamp.each do |file_remote_info|
       count += 1
       file_url = file_remote_info[:file_url]
+      file_id = file_remote_info[:file_id]
       file_path_elements = file_id.split('/')
       if file_id == ""
         dir_path = backup_path
