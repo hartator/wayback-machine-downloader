@@ -1,5 +1,6 @@
 require 'open-uri'
 require 'fileutils'
+require_relative 'tidy_bytes'
 
 class WaybackMachineDownloader
 
@@ -31,7 +32,10 @@ class WaybackMachineDownloader
         file_url = line[2]
         file_id = file_url.split('/')[3..-1].join('/')
         file_id = URI.unescape file_id
-        if @timestamp == 0 or file_timestamp <= @timestamp
+        file_id = file_id.tidy_bytes unless file_id == ""
+        if file_id.nil?
+          puts "Malformed file url, ignoring: #{file_url}"
+        elsif @timestamp == 0 or file_timestamp <= @timestamp
           if file_list_curated[file_id]
             unless file_list_curated[file_id][:timestamp] > file_timestamp
               file_list_curated[file_id] = {file_url: file_url, timestamp: file_timestamp}
@@ -55,7 +59,7 @@ class WaybackMachineDownloader
   end
 
   def download_files
-    puts "Downlading #{@base_url} from Wayback Machine..."
+    puts "Downlading #{@base_url} to #{backup_path} from Wayback Machine..."
     puts
     file_list_curated = get_file_list_curated
     count = 0
@@ -84,7 +88,7 @@ class WaybackMachineDownloader
           rescue OpenURI::HTTPError => e
             puts "#{file_url} # #{e}"
             file.write(e.io.read)
-          rescue Exception => e
+          rescue StandardError => e
             puts "#{file_url} # #{e}"
           end
         end
