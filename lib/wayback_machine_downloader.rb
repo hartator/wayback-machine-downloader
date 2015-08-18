@@ -4,7 +4,7 @@ require_relative 'tidy_bytes'
 
 class WaybackMachineDownloader
 
-  VERSION = "0.1.9"
+  VERSION = "0.1.10"
 
   attr_accessor :base_url, :timestamp
 
