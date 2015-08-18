@@ -2,7 +2,6 @@ require 'minitest/autorun'
 require 'pry-rescue/minitest'
 require 'wayback_machine_downloader'
 
-
 class WaybackMachineDownloaderTest < Minitest::Test
 
   def setup
