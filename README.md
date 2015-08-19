@@ -24,7 +24,7 @@ It will download the last version of every file present on Wayback Machine to `w
 
 You may want to supply a specific timestamp to lock your backup to an older version of the website. Wayback Machine Downloader will then fetch only file versions on or prior to the timestamp specified:
 
-    wayback_machine_downloader http://example.com` --timestamp 20060716231334
+    wayback_machine_downloader http://example.com --timestamp 20060716231334
 
 ### Contributing
 
