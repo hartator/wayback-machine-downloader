@@ -1,6 +1,6 @@
 require 'open-uri'
 require 'fileutils'
-require_relative 'tidy_bytes'
+require_relative 'wayback_machine_downloader/tidy_bytes'
 
 class WaybackMachineDownloader
 
