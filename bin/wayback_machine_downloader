@@ -16,11 +16,17 @@ option_parser = OptionParser.new do |opts|
   opts.on("-t", "--timestamp TIMESTAMP", Integer, "Only files on or before timestamp supplied (ie. 20150806225358)") do |t|
     options[:timestamp] = t
   end
+
+  opts.on("-v", "--version", "Display version") do |t|
+    options[:version] = t
+  end
 end.parse!
 
 if base_url = ARGV[0]
   wayback_machine_downloader = WaybackMachineDownloader.new base_url: base_url, timestamp: options[:timestamp]
   wayback_machine_downloader.download_files
+elsif options[:version]
+  puts WaybackMachineDownloader::VERSION
 else
   puts "You need to specify a website to backup. (e.g., http://example.com)"
   puts "Run `wayback_machine_downloader --help` for more help."
