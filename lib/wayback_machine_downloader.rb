@@ -80,17 +80,21 @@ class WaybackMachineDownloader
       end
       unless File.exists? file_path
         structure_dir_path dir_path
-        open(file_path, "wb") do |file|
-          begin
-            open("http://web.archive.org/web/#{timestamp}id_/#{file_url}") do |uri|
-              file.write(uri.read)
+        begin
+          open(file_path, "wb") do |file|
+            begin
+              open("http://web.archive.org/web/#{timestamp}id_/#{file_url}") do |uri|
+                file.write(uri.read)
+              end
+            rescue OpenURI::HTTPError => e
+              puts "#{file_url} # #{e}"
+              file.write(e.io.read)
+            rescue StandardError => e
+              puts "#{file_url} # #{e}"
             end
-          rescue OpenURI::HTTPError => e
-            puts "#{file_url} # #{e}"
-            file.write(e.io.read)
-          rescue StandardError => e
-            puts "#{file_url} # #{e}"
           end
+        rescue Errno::ENAMETOOLONG => e
+          puts "#{file_url} # #{e}"
         end
         puts "#{file_url} -> #{file_path} (#{count}/#{file_list_curated.size})"
       else
