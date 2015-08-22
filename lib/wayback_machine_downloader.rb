@@ -93,7 +93,7 @@ class WaybackMachineDownloader
               puts "#{file_url} # #{e}"
             end
           end
-        rescue Errno::ENAMETOOLONG => e
+        rescue Errno::ENAMETOOLONG, Errno::EINVAL => e
           puts "#{file_url} # #{e}"
         end
         puts "#{file_url} -> #{file_path} (#{count}/#{file_list_curated.size})"
