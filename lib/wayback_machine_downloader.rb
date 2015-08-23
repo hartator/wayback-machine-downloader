@@ -102,7 +102,7 @@ class WaybackMachineDownloader
       end
     end
     puts
-    puts "Download complete, saved in #{backup_path}. (#{file_list_curated.size} files)"
+    puts "Download complete, saved in #{backup_path} (#{file_list_curated.size} files)"
   end
 
   def structure_dir_path dir_path
