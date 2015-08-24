@@ -79,8 +79,8 @@ class WaybackMachineDownloader
         file_path = backup_path + file_path_elements[0..-1].join('/')
       end
       unless File.exists? file_path
-        structure_dir_path dir_path
         begin
+          structure_dir_path dir_path
           open(file_path, "wb") do |file|
             begin
               open("http://web.archive.org/web/#{timestamp}id_/#{file_url}") do |uri|
@@ -116,7 +116,7 @@ class WaybackMachineDownloader
       FileUtils::mv file_already_existing, file_already_existing_temporary
       FileUtils::mkdir_p file_already_existing
       FileUtils::mv file_already_existing_temporary, file_already_existing_permanent
-      puts "#{file_already_existing} ->  #{file_already_existing_permanent}"
+      puts "#{file_already_existing} -> #{file_already_existing_permanent}"
       structure_dir_path dir_path
     end
   end
