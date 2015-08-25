@@ -18,7 +18,7 @@ Run wayback_machine_downloader with the base url of the website you want to retr
 
 ### How it works
 
-It will download the last version of every file present on Wayback Machine to `websites/example.com/`. It will also re-create a directory structure and auto-create `index.html` pages to work seamlessly with Apache and Nginx. URLs and links structure are preserved as much as possible.
+It will download the last version of every file present on Wayback Machine to `websites/example.com/`. It will also re-create a directory structure and auto-create `index.html` pages to work seamlessly with Apache and Nginx. All files downloaded are the original ones and not Wayback Machine rewritten versions. This way, URLs and links structure are the same than before.
 
 ### Optional Timestamp
 
