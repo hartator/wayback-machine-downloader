@@ -110,7 +110,7 @@ class WaybackMachineDownloader
       FileUtils::mkdir_p dir_path unless File.exists? dir_path
     rescue Errno::EEXIST => e
       puts "# #{e}"
-      file_already_existing = e.to_s.split("File exists @ dir_s_mkdir - ")[-1]
+      file_already_existing = e.to_s.split("File exists - ")[-1]
       file_already_existing_temporary = file_already_existing + '.temp'
       file_already_existing_permanent = file_already_existing + '/index.html'
       FileUtils::mv file_already_existing, file_already_existing_temporary
