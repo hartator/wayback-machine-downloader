@@ -109,8 +109,15 @@ class WaybackMachineDownloader
     begin
       FileUtils::mkdir_p dir_path unless File.exists? dir_path
     rescue Errno::EEXIST => e
-      puts "# #{e}"
-      file_already_existing = e.to_s.split("File exists - ")[-1]
+      error_to_string = e.to_s
+      puts "# #{error_to_string}"
+      if error_to_string.include? "File exists @ dir_s_mkdir - "
+        file_already_existing = e.to_s.split("File exists @ dir_s_mkdir - ")[-1]
+      elsif error_to_string.include? "File exists - "
+        file_already_existing = e.to_s.split("File exists - ")[-1]
+      else
+        raise "Unhandled directory restructure # #{error_to_string}"
+      end
       file_already_existing_temporary = file_already_existing + '.temp'
       file_already_existing_permanent = file_already_existing + '/index.html'
       FileUtils::mv file_already_existing, file_already_existing_temporary
