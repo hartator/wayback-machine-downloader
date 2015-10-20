@@ -59,7 +59,7 @@ class WaybackMachineDownloader
   end
 
   def download_files
-    puts "Downlading #{@base_url} to #{backup_path} from Wayback Machine..."
+    puts "Downloading #{@base_url} to #{backup_path} from Wayback Machine..."
     puts
     file_list_curated = get_file_list_curated
     count = 0
