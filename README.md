@@ -23,7 +23,7 @@ It will download the last version of every file present on Wayback Machine to `w
 
 ### Optional Timestamp
 
-You may want to supply a specific timestamp to lock your backup to an older version of the website, which can be found using the Wayback link: http://web.archive.org/web/**20060716231334**/http://example.com 
+You may want to supply a specific timestamp to lock your backup to an older version of the website, which can be found using the Wayback link: http://web.archive.org/web/20060716231334/http://example.com 
 Wayback Machine Downloader will then fetch only file versions on or prior to the timestamp specified:
 
     wayback_machine_downloader http://example.com --timestamp 20060716231334
