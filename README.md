@@ -37,4 +37,6 @@ To run the tests:
     bundle install
     bundle exec rake test
     
+Travis CI status: 
+
 [![Build Status](https://travis-ci.org/hartator/wayback-machine-downloader.svg?branch=master)](https://travis-ci.org/hartator/wayback-machine-downloader)
