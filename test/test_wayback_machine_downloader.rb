@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require 'pry-rescue/minitest'
+require 'pry-rescue/minitest' unless ENV["TRAVIS"]
 require 'wayback_machine_downloader'
 
 class WaybackMachineDownloaderTest < Minitest::Test
