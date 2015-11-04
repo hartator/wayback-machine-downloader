@@ -1,4 +1,4 @@
-# Wayback Machine Downloader
+# Wayback Machine Downloader 
 
 Download any website from the Internet Archive Wayback Machine.
 
@@ -34,4 +34,7 @@ Contributions are welcome! Just submit a pull request via GitHub.
 
 To run the tests:
 
-    rake test
+    bundle install
+    bundle exec rake test
+    
+[![Build Status](https://travis-ci.org/hartator/wayback-machine-downloader.svg?branch=master)](https://travis-ci.org/hartator/wayback-machine-downloader)
