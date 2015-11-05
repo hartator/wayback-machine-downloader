@@ -67,6 +67,7 @@ class WaybackMachineDownloader
       count += 1
       file_url = file_remote_info[:file_url]
       file_id = file_remote_info[:file_id]
+      file_timestamp = file_remote_info[:timestamp]
       file_path_elements = file_id.split('/')
       if file_id == ""
         dir_path = backup_path
@@ -84,6 +85,7 @@ class WaybackMachineDownloader
           open(file_path, "wb") do |file|
             begin
               open("http://web.archive.org/web/#{timestamp}id_/#{file_url}") do |uri|
+              open("http://web.archive.org/web/#{file_timestamp}id_/#{file_url}") do |uri|
                 file.write(uri.read)
               end
             rescue OpenURI::HTTPError => e
