@@ -28,6 +28,10 @@ class WaybackMachineDownloader
     [index_file_list_raw, all_file_list_raw].each do |file|
       file.each_line do |line|
         line = line.tidy_bytes
+        unless line
+          puts "Malformed line, ignoring."
+          next
+        end
         line = line.split(' ')
         file_timestamp = line[1].to_i
         file_url = line[2]
