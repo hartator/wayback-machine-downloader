@@ -49,7 +49,7 @@ class WaybackMachineDownloader
     file_list_curated
   end
 
-  def file_list_by_timestamp
+  def get_file_list_by_timestamp
     file_list_curated = get_file_list_curated
     file_list_curated = file_list_curated.sort_by { |k,v| v[:timestamp] }.reverse
     file_list_curated.map do |file_remote_info|
@@ -61,7 +61,7 @@ class WaybackMachineDownloader
   def download_files
     puts "Downloading #{@base_url} to #{backup_path} from Wayback Machine..."
     puts
-    file_list_curated = get_file_list_curated
+    file_list_by_timestamp = get_file_list_by_timestamp
     count = 0
     file_list_by_timestamp.each do |file_remote_info|
       count += 1
@@ -84,7 +84,6 @@ class WaybackMachineDownloader
           structure_dir_path dir_path
           open(file_path, "wb") do |file|
             begin
-              open("http://web.archive.org/web/#{timestamp}id_/#{file_url}") do |uri|
               open("http://web.archive.org/web/#{file_timestamp}id_/#{file_url}") do |uri|
                 file.write(uri.read)
               end
@@ -98,13 +97,13 @@ class WaybackMachineDownloader
         rescue StandardError => e
           puts "#{file_url} # #{e}"
         end
-        puts "#{file_url} -> #{file_path} (#{count}/#{file_list_curated.size})"
+        puts "#{file_url} -> #{file_path} (#{count}/#{file_list_by_timestamp.size})"
       else
-        puts "#{file_url} # #{file_path} already exists. (#{count}/#{file_list_curated.size})"
+        puts "#{file_url} # #{file_path} already exists. (#{count}/#{file_list_by_timestamp.size})"
       end
     end
     puts
-    puts "Download complete, saved in #{backup_path} (#{file_list_curated.size} files)"
+    puts "Download complete, saved in #{backup_path} (#{file_list_by_timestamp.size} files)"
   end
 
   def structure_dir_path dir_path

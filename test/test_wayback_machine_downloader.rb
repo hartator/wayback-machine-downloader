@@ -27,7 +27,7 @@ class WaybackMachineDownloaderTest < Minitest::Test
       file_url: "http://www.onlyfreegames.net:80/Fs-06.jpg",
       timestamp: 20060716125343
     }
-    assert_equal file_expected, @wayback_machine_downloader.file_list_by_timestamp[-1]
+    assert_equal file_expected, @wayback_machine_downloader.get_file_list_by_timestamp[-1]
   end
 
   def test_file_download
