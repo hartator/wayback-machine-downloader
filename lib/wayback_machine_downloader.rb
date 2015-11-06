@@ -13,6 +13,7 @@ class WaybackMachineDownloader
   def initialize params
     @base_url = params[:base_url]
     @timestamp = params[:timestamp].to_i
+    @accept_regex = /#{params[:accept_regex]}/
   end
 
   def backup_name
@@ -48,7 +49,21 @@ class WaybackMachineDownloader
         end
       end
     end
-    file_list_curated
+
+    # if accept_regex not defined, just return the file_list_curated
+    if @accept_regex.nil?
+      return file_list_curated
+    end
+
+
+    # accept_regex defined. now we need to create a filtered list.
+    filtered_file_list_curated = Hash.new
+    file_list_curated.each do |file_id, fileinfo|
+      if fileinfo[:file_url].match @accept_regex
+        filtered_file_list_curated[file_id] = fileinfo
+      end
+    end
+    return filtered_file_list_curated
   end
 
   def get_file_list_by_timestamp
@@ -64,6 +79,10 @@ class WaybackMachineDownloader
     puts "Downloading #{@base_url} to #{backup_path} from Wayback Machine..."
     puts
     file_list_by_timestamp = get_file_list_by_timestamp
+    if file_list_by_timestamp.count == 0
+      puts "No files to download. Possible reasons:\n\t* Accept regex didn't let any files through (Accept Regex: \"#{@accept_regex.to_s}\")\n\t* Site is not in wayback machine."
+      return
+    end
     count = 0
     file_list_by_timestamp.each do |file_remote_info|
       count += 1
