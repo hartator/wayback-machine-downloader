@@ -30,6 +30,16 @@ class WaybackMachineDownloaderTest < Minitest::Test
     assert_equal file_expected, @wayback_machine_downloader.get_file_list_by_timestamp[-1]
   end
 
+  def test_file_list_notthere_regex
+    regextester = WaybackMachineDownloader.new base_url: 'http://www.onlyfreegames.net', accept_regex: 'abc123'
+    assert_equal 0, regextester.get_file_list_curated.length
+  end
+
+  def test_file_list_singleresult_regex
+    regextester = WaybackMachineDownloader.new base_url: 'http://www.onlyfreegames.net', accept_regex: 'menu.html$'
+    assert_equal 1, regextester.get_file_list_curated.length
+  end
+
   def test_file_download
     @wayback_machine_downloader.download_files
     linux_page = open 'websites/www.onlyfreegames.net/linux.htm'

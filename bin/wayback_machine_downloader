@@ -2,6 +2,7 @@
 
 require_relative '../lib/wayback_machine_downloader'
 require 'optparse'
+require 'pp'
 
 options = {}
 option_parser = OptionParser.new do |opts|
@@ -11,10 +12,14 @@ option_parser = OptionParser.new do |opts|
   opts.separator "Download any website from the Wayback Machine."
 
   opts.separator ""
-  opts.separator "Optional option:"
+  opts.separator "Optional options:"
 
   opts.on("-t", "--timestamp TIMESTAMP", Integer, "Only files on or before timestamp supplied (ie. 20150806225358)") do |t|
     options[:timestamp] = t
+  end
+
+  opts.on("--accept-regex [ACCEPT_REGEX]", String,"Specify a regular expression to download. If a path doesn't meet this regex, it won't get downloaded.") do |accept_regex|
+    options[:accept_regex] = accept_regex
   end
 
   opts.on("-v", "--version", "Display version") do |t|
@@ -22,8 +27,11 @@ option_parser = OptionParser.new do |opts|
   end
 end.parse!
 
-if base_url = ARGV[0]
-  wayback_machine_downloader = WaybackMachineDownloader.new base_url: base_url, timestamp: options[:timestamp]
+# this used to be 0. we want to look at the /last/ option.
+# 
+# TODO: this argument needs to be handled better. argument handling is sorta messy.
+if base_url = ARGV[-1]
+  wayback_machine_downloader = WaybackMachineDownloader.new base_url: base_url, timestamp: options[:timestamp], accept_regex: options[:accept_regex]
   wayback_machine_downloader.download_files
 elsif options[:version]
   puts WaybackMachineDownloader::VERSION
