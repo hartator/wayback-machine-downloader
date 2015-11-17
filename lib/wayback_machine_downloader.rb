@@ -13,7 +13,7 @@ class WaybackMachineDownloader
   def initialize params
     @base_url = params[:base_url]
     @timestamp = params[:timestamp].to_i
-    @accept_regex = /#{params[:accept_regex]}/
+    @only_filter = params[:accept_regex].to_regex
   end
 
   def backup_name
@@ -25,7 +25,7 @@ class WaybackMachineDownloader
   end
 
   def get_file_list_curated
-    index_file_list_raw =  open "http://web.archive.org/cdx/search/xd?url=#{@base_url}"
+    index_file_list_raw = open "http://web.archive.org/cdx/search/xd?url=#{@base_url}"
     all_file_list_raw = open "http://web.archive.org/cdx/search/xd?url=#{@base_url}/*"
     file_list_curated = Hash.new
     [index_file_list_raw, all_file_list_raw].each do |file|
