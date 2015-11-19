@@ -13,7 +13,7 @@ class WaybackMachineDownloader
   def initialize params
     @base_url = params[:base_url]
     @timestamp = params[:timestamp].to_i
-    @only_filter = params[:accept_regex].to_regex
+    @only_filter = Regexp.new params[:only_filter]
   end
 
   def backup_name
