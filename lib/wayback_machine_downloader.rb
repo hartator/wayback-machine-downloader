@@ -3,17 +3,18 @@
 require 'open-uri'
 require 'fileutils'
 require_relative 'wayback_machine_downloader/tidy_bytes'
+require_relative 'wayback_machine_downloader/to_regex'
 
 class WaybackMachineDownloader
 
   VERSION = "0.1.18"
 
-  attr_accessor :base_url, :timestamp
+  attr_accessor :base_url, :timestamp, :only_filter
 
   def initialize params
     @base_url = params[:base_url]
     @timestamp = params[:timestamp].to_i
-    @only_filter = Regexp.new params[:only_filter]
+    @only_filter = params[:only_filter]
   end
 
   def backup_name
@@ -22,6 +23,19 @@ class WaybackMachineDownloader
 
   def backup_path
     'websites/' + backup_name + '/'
+  end
+
+  def match_only_filter file_url
+    if @only_filter
+      only_filter_regex = @only_filter.to_regex
+      if only_filter_regex
+        only_filter_regex =~ file_url
+      else
+        file_url.downcase.include? @only_filter.downcase
+      end
+    else
+      true
+    end
   end
 
   def get_file_list_curated
@@ -39,7 +53,9 @@ class WaybackMachineDownloader
         if file_id.nil?
           puts "Malformed file url, ignoring: #{file_url}"
         elsif @timestamp == 0 or file_timestamp <= @timestamp
-          if file_list_curated[file_id]
+          if not match_only_filter(file_url)
+            puts "File url not in supplied only filter, ignoring: #{file_url}"
+          elsif file_list_curated[file_id]
             unless file_list_curated[file_id][:timestamp] > file_timestamp
               file_list_curated[file_id] = {file_url: file_url, timestamp: file_timestamp}
             end
@@ -49,21 +65,7 @@ class WaybackMachineDownloader
         end
       end
     end
-
-    # if accept_regex not defined, just return the file_list_curated
-    if @accept_regex.nil?
-      return file_list_curated
-    end
-
-
-    # accept_regex defined. now we need to create a filtered list.
-    filtered_file_list_curated = Hash.new
-    file_list_curated.each do |file_id, fileinfo|
-      if fileinfo[:file_url].match @accept_regex
-        filtered_file_list_curated[file_id] = fileinfo
-      end
-    end
-    return filtered_file_list_curated
+    file_list_curated
   end
 
   def get_file_list_by_timestamp
