@@ -30,9 +30,15 @@ Wayback Machine Downloader will then fetch only file versions on or prior to the
 
 ## Optional Only URL Filter
 
-You may want to retrieve files that are of certain type (e.g., .pdf, .jpg, .wrd...) or are in a specific directory. To do so, you can supply the `--only` flag with a string or a Regex to limit what Wayback Machine Downloader will download.
+You may want to retrieve files which are of a certain type (e.g., .pdf, .jpg, .wrd...) or are in a specific directory. To do so, you can supply the `--only` flag with a string or a regex (using the '/regex/' notation) to limit which files Wayback Machine Downloader will download.
 
-    wayback_machine_downloader http://example.com --only \.pdf
+For example, if you want to download files only inside a specific `my_directory`:
+
+    wayback_machine_downloader http://example.com --only my_directory
+    
+Or if you want to download every images without anything else:
+    
+    wayback_machine_downloader http://example.com --only '/\.(gif|jpg|jpeg)$/i'
 
 ## Contributing
 
