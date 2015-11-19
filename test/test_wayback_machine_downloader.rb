@@ -29,14 +29,19 @@ class WaybackMachineDownloaderTest < Minitest::Test
     assert_equal file_expected, @wayback_machine_downloader.get_file_list_by_timestamp[-1]
   end
 
-  def test_file_list_notthere_regex
-    regextester = WaybackMachineDownloader.new base_url: 'http://www.onlyfreegames.net', accept_regex: 'abc123'
-    assert_equal 0, regextester.get_file_list_curated.length
+  def test_file_list_only_filter_without_matches
+    @wayback_machine_downloader.only_filter = 'abc123'
+    assert_equal 0, @wayback_machine_downloader.get_file_list_curated.size
   end
 
-  def test_file_list_singleresult_regex
-    regextester = WaybackMachineDownloader.new base_url: 'http://www.onlyfreegames.net', accept_regex: 'menu.html$'
-    assert_equal 1, regextester.get_file_list_curated.length
+  def test_file_list_only_filter_with_1_match
+    @wayback_machine_downloader.only_filter = 'menu.html'
+    assert_equal 1, @wayback_machine_downloader.get_file_list_curated.size
+  end
+
+  def test_file_list_only_filter_with_a_regex
+    @wayback_machine_downloader.only_filter = '/\.(gif|je?pg|bmp)$/i'
+    assert_equal 37, @wayback_machine_downloader.get_file_list_curated.size
   end
 
   def test_file_download
