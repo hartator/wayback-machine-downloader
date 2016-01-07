@@ -6,12 +6,11 @@ require_relative 'wayback_machine_downloader/tidy_bytes'
 require_relative 'wayback_machine_downloader/to_regex'
 
 class WaybackMachineDownloader
-
   VERSION = "0.2.0"
 
   attr_accessor :base_url, :timestamp, :only_filter
 
-  def initialize params
+  def initialize(params)
     @base_url = params[:base_url]
     @timestamp = params[:timestamp].to_i
     @only_filter = params[:only_filter]
@@ -25,7 +24,7 @@ class WaybackMachineDownloader
     'websites/' + backup_name + '/'
   end
 
-  def match_only_filter file_url
+  def match_only_filter(file_url)
     if @only_filter
       only_filter_regex = @only_filter.to_regex
       if only_filter_regex
@@ -41,7 +40,7 @@ class WaybackMachineDownloader
   def get_file_list_curated
     index_file_list_raw = open "http://web.archive.org/cdx/search/xd?url=#{@base_url}"
     all_file_list_raw = open "http://web.archive.org/cdx/search/xd?url=#{@base_url}/*"
-    file_list_curated = Hash.new
+    file_list_curated = {}
     [index_file_list_raw, all_file_list_raw].each do |file|
       file.each_line do |line|
         line = line.split(' ')
@@ -57,10 +56,10 @@ class WaybackMachineDownloader
             puts "File url not in supplied only filter, ignoring: #{file_url}"
           elsif file_list_curated[file_id]
             unless file_list_curated[file_id][:timestamp] > file_timestamp
-              file_list_curated[file_id] = {file_url: file_url, timestamp: file_timestamp}
+              file_list_curated[file_id] = { file_url: file_url, timestamp: file_timestamp }
             end
           else
-            file_list_curated[file_id] = {file_url: file_url, timestamp: file_timestamp}
+            file_list_curated[file_id] = { file_url: file_url, timestamp: file_timestamp }
           end
         end
       end
@@ -70,7 +69,7 @@ class WaybackMachineDownloader
 
   def get_file_list_by_timestamp
     file_list_curated = get_file_list_curated
-    file_list_curated = file_list_curated.sort_by { |k,v| v[:timestamp] }.reverse
+    file_list_curated = file_list_curated.sort_by { |_k, v| v[:timestamp] }.reverse
     file_list_curated.map do |file_remote_info|
       file_remote_info[1][:file_id] = file_remote_info[0]
       file_remote_info[1]
@@ -82,7 +81,7 @@ class WaybackMachineDownloader
     puts
     file_list_by_timestamp = get_file_list_by_timestamp
     if file_list_by_timestamp.count == 0
-      puts "No files to download. Possible reasons:\n\t* Accept regex didn't let any files through (Accept Regex: \"#{@accept_regex.to_s}\")\n\t* Site is not in wayback machine."
+      puts "No files to download. Possible reasons:\n\t* Accept regex didn't let any files through (Accept Regex: \"#{@accept_regex}\")\n\t* Site is not in wayback machine."
       return
     end
     count = 0
@@ -102,7 +101,9 @@ class WaybackMachineDownloader
         dir_path = backup_path + file_path_elements[0..-2].join('/')
         file_path = backup_path + file_path_elements[0..-1].join('/')
       end
-      unless File.exists? file_path
+      if File.exist? file_path
+        puts "#{file_url} # #{file_path} already exists. (#{count}/#{file_list_by_timestamp.size})"
+      else
         begin
           structure_dir_path dir_path
           open(file_path, "wb") do |file|
@@ -121,35 +122,30 @@ class WaybackMachineDownloader
           puts "#{file_url} # #{e}"
         end
         puts "#{file_url} -> #{file_path} (#{count}/#{file_list_by_timestamp.size})"
-      else
-        puts "#{file_url} # #{file_path} already exists. (#{count}/#{file_list_by_timestamp.size})"
       end
     end
     puts
     puts "Download complete, saved in #{backup_path} (#{file_list_by_timestamp.size} files)"
   end
 
-  def structure_dir_path dir_path
-    begin
-      FileUtils::mkdir_p dir_path unless File.exists? dir_path
-    rescue Errno::EEXIST => e
-      error_to_string = e.to_s
-      puts "# #{error_to_string}"
-      if error_to_string.include? "File exists @ dir_s_mkdir - "
-        file_already_existing = error_to_string.split("File exists @ dir_s_mkdir - ")[-1]
-      elsif error_to_string.include? "File exists - "
-        file_already_existing = error_to_string.split("File exists - ")[-1]
-      else
-        raise "Unhandled directory restructure error # #{error_to_string}"
-      end
-      file_already_existing_temporary = file_already_existing + '.temp'
-      file_already_existing_permanent = file_already_existing + '/index.html'
-      FileUtils::mv file_already_existing, file_already_existing_temporary
-      FileUtils::mkdir_p file_already_existing
-      FileUtils::mv file_already_existing_temporary, file_already_existing_permanent
-      puts "#{file_already_existing} -> #{file_already_existing_permanent}"
-      structure_dir_path dir_path
+  def structure_dir_path(dir_path)
+    FileUtils.mkdir_p dir_path unless File.exist? dir_path
+  rescue Errno::EEXIST => e
+    error_to_string = e.to_s
+    puts "# #{error_to_string}"
+    if error_to_string.include? "File exists @ dir_s_mkdir - "
+      file_already_existing = error_to_string.split("File exists @ dir_s_mkdir - ")[-1]
+    elsif error_to_string.include? "File exists - "
+      file_already_existing = error_to_string.split("File exists - ")[-1]
+    else
+      raise "Unhandled directory restructure error # #{error_to_string}"
     end
+    file_already_existing_temporary = file_already_existing + '.temp'
+    file_already_existing_permanent = file_already_existing + '/index.html'
+    FileUtils.mv file_already_existing, file_already_existing_temporary
+    FileUtils.mkdir_p file_already_existing
+    FileUtils.mv file_already_existing_temporary, file_already_existing_permanent
+    puts "#{file_already_existing} -> #{file_already_existing_permanent}"
+    structure_dir_path dir_path
   end
-
 end

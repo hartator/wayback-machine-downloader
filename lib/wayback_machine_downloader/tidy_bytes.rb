@@ -1,5 +1,4 @@
 module TibyBytes
-
   # CP-1252 decimal byte => UTF-8 approximation as an array of bytes
   CP1252 = {
     128 => [226, 130, 172],
@@ -37,7 +36,6 @@ module TibyBytes
   }
 
   module StringMixin
-
     # Attempt to replace invalid UTF-8 bytes with valid ones. This method
     # naively assumes if you have invalid UTF8 bytes, they are either Windows
     # CP-1252 or ISO8859-1. In practice this isn't a bad assumption, but may not
@@ -46,7 +44,6 @@ module TibyBytes
     # Passing +true+ will forcibly tidy all bytes, assuming that the string's
     # encoding is CP-1252 or ISO-8859-1.
     def tidy_bytes(force = false)
-
       if force
         return unpack("C*").map do |b|
           tidy_byte(b)
@@ -58,7 +55,6 @@ module TibyBytes
       last_lead = 0
 
       bytes.each_index do |i|
-
         byte          = bytes[i]
         is_ascii      = byte < 128
         is_cont       = byte > 127 && byte < 192
@@ -77,8 +73,8 @@ module TibyBytes
             # Expected continuation, but got ASCII or leading? Clean backwards up to
             # the leading byte.
             begin
-              (1..(i - last_lead)).each {|j| bytes[i - j] = tidy_byte(bytes[i - j])}
-            rescue NoMethodError => e
+              (1..(i - last_lead)).each { |j| bytes[i - j] = tidy_byte(bytes[i - j]) }
+            rescue NoMethodError
               next
             end
             conts_expected = 0
@@ -90,7 +86,14 @@ module TibyBytes
             else
               # Valid leading byte? Expect continuations determined by position of
               # first zero bit, with max of 3.
-              conts_expected = byte < 224 ? 1 : byte < 240 ? 2 : 3
+              conts_expected =
+                if byte < 224
+                  1
+                elsif byte < 240
+                  2
+                else
+                  3
+                end
               last_lead = i
             end
           end
@@ -98,7 +101,7 @@ module TibyBytes
       end
       begin
         bytes.empty? ? nil : bytes.flatten.compact.pack("C*").unpack("U*").pack("U*")
-      rescue ArgumentError => e
+      rescue ArgumentError
         nil
       end
     end
@@ -111,9 +114,14 @@ module TibyBytes
     private
 
     def tidy_byte(byte)
-      byte < 160 ? TibyBytes::CP1252[byte] : byte < 192 ? [194, byte] : [195, byte - 64]
+      if byte < 160
+        TibyBytes::CP1252[byte]
+      elsif byte < 192
+        [194, byte]
+      else
+        [195, byte - 64]
+      end
     end
-
   end
 end
 
