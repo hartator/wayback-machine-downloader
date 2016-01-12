@@ -38,7 +38,7 @@ For example, if you only want to download files inside a specific `my_directory`
     
 Or if you want to download every images without anything else:
     
-    wayback_machine_downloader http://example.com --only '/\.(gif|jpg|jpeg)$/i'
+    wayback_machine_downloader http://example.com --only "/\.(gif|jpg|jpeg)$/i"
 
 ## Contributing
 
