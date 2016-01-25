@@ -2,7 +2,6 @@ require 'minitest/autorun'
 require 'wayback_machine_downloader'
 
 class WaybackMachineDownloaderTest < Minitest::Test
-
   def setup
     @wayback_machine_downloader = WaybackMachineDownloader.new base_url: 'http://www.onlyfreegames.net'
     $stdout = StringIO.new
@@ -54,5 +53,4 @@ class WaybackMachineDownloaderTest < Minitest::Test
     @wayback_machine_downloader.timestamp = 20050716231334
     assert_nil @wayback_machine_downloader.get_file_list_curated["linux.htm"]
   end
-
 end

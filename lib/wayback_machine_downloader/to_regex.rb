@@ -9,7 +9,7 @@ module ToRegex
     INLINE_OPTIONS = /[imxnesu]*/
     REGEXP_DELIMITERS = {
       '%r{' => '}',
-      '/' => '/',
+      '/' => '/'
     }
 
     # Get a regex back
@@ -24,9 +24,8 @@ module ToRegex
     # @option options [true,false] :extended /foo/x
     # @option options [true,false] :lang /foo/[nesu]
     def to_regex(options = {})
-      if args = as_regexp(options)
-        ::Regexp.new *args
-      end
+      args = as_regexp(options)
+      ::Regexp.new(*args) if args
     end
 
     # Return arguments that can be passed to `Regexp.new`
@@ -41,7 +40,10 @@ module ToRegex
 
       if options[:literal] or (options[:detect] and ToRegexp::String.literal?(str))
         content = ::Regexp.escape str
-      elsif delim_set = REGEXP_DELIMITERS.detect { |k, _| str.start_with?(k) }
+      else
+        delim_set = REGEXP_DELIMITERS.detect { |k, _| str.start_with?(k) }
+        return unless delim_set
+
         delim_start, delim_end = delim_set
         /\A#{delim_start}(.*)#{delim_end}(#{INLINE_OPTIONS})\z/u =~ str
         content = $1
@@ -55,22 +57,18 @@ module ToRegex
           # 'n', 'N' = none, 'e', 'E' = EUC, 's', 'S' = SJIS, 'u', 'U' = UTF-8
           options[:lang] = inline_options.scan(/[nesu]/i).join.downcase
         end
-      else
-        return
       end
 
       ignore_case = options[:ignore_case] ? ::Regexp::IGNORECASE : 0
       multiline = options[:multiline] ? ::Regexp::MULTILINE : 0
       extended = options[:extended] ? ::Regexp::EXTENDED : 0
       lang = options[:lang] || ''
-      if ::RUBY_VERSION > '1.9' and lang.include?('u')
-        lang = lang.delete 'u'
-      end
+      lang.delete! 'u' if ::RUBY_VERSION > '1.9' and lang.include?('u')
 
       if lang.empty?
-        [ content, (ignore_case|multiline|extended) ]
+        [content, (ignore_case | multiline | extended)]
       else
-        [ content, (ignore_case|multiline|extended), lang ]
+        [content, (ignore_case | multiline | extended), lang]
       end
     end
   end
