@@ -48,5 +48,3 @@ To run the tests:
 
     bundle install
     bundle exec rake test
-    
-If you want to help but you don't know where to start, you can work on  [this]( https://github.com/hartator/wayback-machine-downloader/issues/26).
