@@ -2,19 +2,21 @@
 
 require 'open-uri'
 require 'fileutils'
+require 'cgi'
 require_relative 'wayback_machine_downloader/tidy_bytes'
 require_relative 'wayback_machine_downloader/to_regex'
 
 class WaybackMachineDownloader
 
-  VERSION = "0.2.4"
+  VERSION = "0.2.5"
 
-  attr_accessor :base_url, :timestamp, :only_filter
+  attr_accessor :base_url, :timestamp, :only_filter, :exclude_filter
 
   def initialize params
     @base_url = params[:base_url]
     @timestamp = params[:timestamp].to_i
     @only_filter = params[:only_filter]
+    @exclude_filter = params[:exclude_filter]
   end
 
   def backup_name
@@ -38,6 +40,19 @@ class WaybackMachineDownloader
     end
   end
 
+  def match_exclude_filter file_url
+    if @exclude_filter
+      exclude_filter_regex = @exclude_filter.to_regex
+      if exclude_filter_regex
+        exclude_filter_regex =~ file_url
+      else
+        file_url.downcase.include? @exclude_filter.downcase
+      end
+    else
+      true
+    end
+  end
+
   def get_file_list_curated
     index_file_list_raw = open "http://web.archive.org/cdx/search/xd?url=#{@base_url}"
     all_file_list_raw = open "http://web.archive.org/cdx/search/xd?url=#{@base_url}/*"
@@ -48,12 +63,15 @@ class WaybackMachineDownloader
         file_timestamp = line[1].to_i
         file_url = line[2]
         file_id = file_url.split('/')[3..-1].join('/')
-        file_id = URI.unescape file_id
+        file_id = CGI::unescape file_id
         file_id = file_id.tidy_bytes unless file_id == ""
         if file_id.nil?
           puts "Malformed file url, ignoring: #{file_url}"
         elsif @timestamp == 0 or file_timestamp <= @timestamp
-          if not match_only_filter(file_url)
+          # match exclude first so it has precedence
+          if match_exclude_filter(file_url)
+            puts "File url matches exclude filter, ignoring: #{file_url}"
+          elsif not match_only_filter(file_url)
             puts "File url not in supplied only filter, ignoring: #{file_url}"
           elsif file_list_curated[file_id]
             unless file_list_curated[file_id][:timestamp] > file_timestamp
@@ -82,7 +100,7 @@ class WaybackMachineDownloader
     puts
     file_list_by_timestamp = get_file_list_by_timestamp
     if file_list_by_timestamp.count == 0
-      puts "No files to download. Possible reasons:\n\t* Accept regex didn't let any files through (Accept Regex: \"#{@accept_regex.to_s}\")\n\t* Site is not in wayback machine."
+      puts "No files to download. Possible reasons:\n\t* Accept regex didn't let any files through (Accept Regex: \"#{@only_filter.to_s}\")\n\t* Site is not in wayback machine."
       return
     end
     count = 0
