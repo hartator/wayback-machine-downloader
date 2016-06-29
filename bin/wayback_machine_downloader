@@ -22,13 +22,17 @@ option_parser = OptionParser.new do |opts|
     options[:only_filter] = t
   end
 
+  opts.on("-x", "--exclude EXCLUDE_FILTER", String, "Skip urls that match this filter (use // notation for the filter to be treated as a regex)") do |t|
+    options[:exclude_filter] = t
+  end
+
   opts.on("-v", "--version", "Display version") do |t|
     options[:version] = t
   end
 end.parse!
 
 if (base_url = ARGV[-1])
-  wayback_machine_downloader = WaybackMachineDownloader.new base_url: base_url, timestamp: options[:timestamp], only_filter: options[:only_filter]
+  wayback_machine_downloader = WaybackMachineDownloader.new base_url: base_url, timestamp: options[:timestamp], only_filter: options[:only_filter], exclude_filter: options[:exclude_filter]
   wayback_machine_downloader.download_files
 elsif options[:version]
   puts WaybackMachineDownloader::VERSION
