@@ -40,6 +40,16 @@ Or if you want to download every images without anything else:
     
     wayback_machine_downloader http://example.com --only "/\.(gif|jpg|jpeg)$/i"
 
+## Using the Docker images
+
+All the options should work the same, just run it with this command instead of installing the gem:
+
+    docker run --rm -it -v $PWD/websites:/websites hartator/wayback-machine-downloader
+
+You can use git branches as image tags to test new features on Docker Hub automated builds:
+
+    docker run --rm -it -v $PWD/websites:/websites yourname/yourrepo:yourfeature
+
 ## Contributing
 
 Contributions are welcome! Just submit a pull request via GitHub.
