@@ -49,7 +49,7 @@ class WaybackMachineDownloader
         file_url.downcase.include? @exclude_filter.downcase
       end
     else
-      true
+      false
     end
   end
 
