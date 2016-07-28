@@ -68,11 +68,10 @@ class WaybackMachineDownloader
         if file_id.nil?
           puts "Malformed file url, ignoring: #{file_url}"
         elsif @timestamp == 0 or file_timestamp <= @timestamp
-          # match exclude first so it has precedence
           if match_exclude_filter(file_url)
             puts "File url matches exclude filter, ignoring: #{file_url}"
           elsif not match_only_filter(file_url)
-            puts "File url not in supplied only filter, ignoring: #{file_url}"
+            puts "File url doesn't match only filter, ignoring: #{file_url}"
           elsif file_list_curated[file_id]
             unless file_list_curated[file_id][:timestamp] > file_timestamp
               file_list_curated[file_id] = {file_url: file_url, timestamp: file_timestamp}
@@ -100,7 +99,11 @@ class WaybackMachineDownloader
     puts
     file_list_by_timestamp = get_file_list_by_timestamp
     if file_list_by_timestamp.count == 0
-      puts "No files to download. Possible reasons:\n\t* Accept regex didn't let any files through (Accept Regex: \"#{@only_filter.to_s}\")\n\t* Site is not in wayback machine."
+      puts "No files to download."
+      puts "Possible reaosons:"
+      puts "\t* Site is not in Wayback Machine Archive."
+      puts "\t* Only filter too restrictive (#{only_filter.to_s})" if @only_filter
+      puts "\t* Exclude filter too wide (#{exclude_filter.to_s})" if @exclude_filter
       return
     end
     count = 0
