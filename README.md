@@ -21,16 +21,16 @@ Run wayback_machine_downloader with the base url of the website you want to retr
 
 It will download the last version of every file present on Wayback Machine to `./websites/example.com/`. It will also re-create a directory structure and auto-create `index.html` pages to work seamlessly with Apache and Nginx. All files downloaded are the original ones and not Wayback Machine rewritten versions. This way, URLs and links structure are the same than before.
 
-## Optional Timestamp
+## On or Before Timestamp
 
-You may want to supply a specific timestamp to lock your backup to an older version of the website, which can be found inside the urls of the regular Wayback Machine website (e.g., http://web.archive.org/web/20060716231334/http://example.com).
+Optional. You may want to supply a specific timestamp to lock your backup to an older version of the website, which can be found inside the urls of the regular Wayback Machine website (e.g., http://web.archive.org/web/*20060716231334*/http://example.com).
 Wayback Machine Downloader will then fetch only file versions on or prior to the timestamp specified:
 
     wayback_machine_downloader http://example.com --timestamp 20060716231334
 
-## Optional Only URL Filter
+## Only URL Filter
 
-You may want to retrieve files which are of a certain type (e.g., .pdf, .jpg, .wrd...) or are in a specific directory. To do so, you can supply the `--only` flag with a string or a regex (using the '/regex/' notation) to limit which files Wayback Machine Downloader will download.
+Optional. You may want to retrieve files which are of a certain type (e.g., .pdf, .jpg, .wrd...) or are in a specific directory. To do so, you can supply the `--only` flag with a string or a regex (using the '/regex/' notation) to limit which files Wayback Machine Downloader will download.
 
 For example, if you only want to download files inside a specific `my_directory`:
 
@@ -39,6 +39,19 @@ For example, if you only want to download files inside a specific `my_directory`
 Or if you want to download every images without anything else:
     
     wayback_machine_downloader http://example.com --only "/\.(gif|jpg|jpeg)$/i"
+
+## Exclude URL Filter
+
+Optional. You may want to retrieve files which aren't of a certain type (e.g., .pdf, .jpg, .wrd...) or aren't in a specific directory. To do so, you can supply the `--exclude` flag with a string or a regex (using the '/regex/' notation) to limit which files Wayback Machine Downloader will download.
+
+For example, if you want to avoid downloading files inside `my_directory`:
+
+    wayback_machine_downloader http://example.com --exclude my_directory
+    
+Or if you want to download everything except images:
+    
+    wayback_machine_downloader http://example.com --exclude "/\.(gif|jpg|jpeg)$/i"
+
 
 ## Contributing
 
