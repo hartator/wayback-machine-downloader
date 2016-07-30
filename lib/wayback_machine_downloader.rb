@@ -110,6 +110,8 @@ class WaybackMachineDownloader
       puts "No files to download."
       puts "Possible reaosons:"
       puts "\t* Site is not in Wayback Machine Archive."
+      puts "\t* From timestamp too much in the future." if @from_timestamp and @from_timestamp != 0 
+      puts "\t* To timestamp too much in the past." if @to_timestamp and @to_timestamp != 0 
       puts "\t* Only filter too restrictive (#{only_filter.to_s})" if @only_filter
       puts "\t* Exclude filter too wide (#{exclude_filter.to_s})" if @exclude_filter
       return
