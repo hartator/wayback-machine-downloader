@@ -21,12 +21,19 @@ Run wayback_machine_downloader with the base url of the website you want to retr
 
 It will download the last version of every file present on Wayback Machine to `./websites/example.com/`. It will also re-create a directory structure and auto-create `index.html` pages to work seamlessly with Apache and Nginx. All files downloaded are the original ones and not Wayback Machine rewritten versions. This way, URLs and links structure are the same than before.
 
-## On or Before Timestamp
+## From Timestamp
 
-Optional. You may want to supply a specific timestamp to lock your backup to an older version of the website, which can be found inside the urls of the regular Wayback Machine website (e.g., http://web.archive.org/web/*20060716231334*/http://example.com).
-Wayback Machine Downloader will then fetch only file versions on or prior to the timestamp specified:
+Optional. You may want to supply a from timestamp to lock your backup to a specific version of the website. Timestamps can be found inside the urls of the regular Wayback Machine website (e.g., http://web.archive.org/web/*20060716231334*/http://example.com). You can also use years (2006), years + month (200607), etc. Can be used in combination of *To Timestamp*.
+Wayback Machine Downloader will then fetch only file versions on or after the timestamp specified:
 
-    wayback_machine_downloader http://example.com --timestamp 20060716231334
+    wayback_machine_downloader http://example.com --from 20060716231334
+
+## To Timestamp
+
+Optional. You may want to supply a to timestamp to lock your backup to a specifc version of the website. Timestamps can be found inside the urls of the regular Wayback Machine website (e.g., http://web.archive.org/web/*20100916231334*/http://example.com). You can also use years (2010), years + month (201009), etc. Can be used in combination of *From Timestamp*.
+Wayback Machine Downloader will then fetch only file versions on or before the timestamp specified:
+
+    wayback_machine_downloader http://example.com --to 20100916231334
 
 ## Only URL Filter
 
