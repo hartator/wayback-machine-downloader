@@ -44,6 +44,21 @@ class WaybackMachineDownloaderTest < Minitest::Test
     assert_equal 37, @wayback_machine_downloader.get_file_list_curated.size
   end
 
+  def test_file_list_exclude_filter_without_matches
+    @wayback_machine_downloader.exclude_filter = 'abc123'
+    assert_equal 69, @wayback_machine_downloader.get_file_list_curated.size
+  end
+
+  def test_file_list_exclude_filter_with_1_match
+    @wayback_machine_downloader.exclude_filter = 'menu.html'
+    assert_equal 68, @wayback_machine_downloader.get_file_list_curated.size
+  end
+
+  def test_file_list_exclude_filter_with_a_regex
+    @wayback_machine_downloader.exclude_filter = '/\.(gif|je?pg|bmp)$/i'
+    assert_equal 32, @wayback_machine_downloader.get_file_list_curated.size
+  end
+
   def test_file_download
     @wayback_machine_downloader.download_files
     linux_page = open 'websites/www.onlyfreegames.net/linux.htm'
