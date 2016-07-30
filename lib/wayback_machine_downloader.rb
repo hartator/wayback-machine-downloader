@@ -10,11 +10,12 @@ class WaybackMachineDownloader
 
   VERSION = "0.3.0"
 
-  attr_accessor :base_url, :timestamp, :only_filter, :exclude_filter
+  attr_accessor :base_url, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter
 
   def initialize params
     @base_url = params[:base_url]
-    @timestamp = params[:timestamp].to_i
+    @from_timestamp = params[:from_timestamp].to_i
+    @to_timestamp = params[:to_timestamp].to_i
     @only_filter = params[:only_filter]
     @exclude_filter = params[:exclude_filter]
   end
