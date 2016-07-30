@@ -63,11 +63,11 @@ Or if you want to download everything except images:
 
 As an alternative installation way, we have a Docker image! Retrieve the wayback-machine-downloader Docker image this way:
 
-docker pull hartator/wayback-machine-downloader
+    docker pull hartator/wayback-machine-downloader
 
 Then, you should be able to use the Docker image to download websites. For example:
 
-docker run --rm -it -v $PWD/websites:/websites hartator/wayback-machine-downloader http://example.com
+    docker run --rm -it -v $PWD/websites:/websites hartator/wayback-machine-downloader http://example.com
 
 ## Contributing
 
