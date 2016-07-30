@@ -57,18 +57,27 @@ class WaybackMachineDownloader
   def get_file_list_curated
     index_file_list_raw = open "http://web.archive.org/cdx/search/xd?url=#{@base_url}"
     all_file_list_raw = open "http://web.archive.org/cdx/search/xd?url=#{@base_url}/*"
+    parameters_for_wayback_machine_api = "&fl=timestamp,original&fastLatest=true&filter=statuscode:200&collapse=original"
+    if @from_timestamp and @from_timestamp != 0
+      parameters_for_wayback_machine_api += "&from=" + @from_timestamp.to_s
+    end
+    if @to_timestamp and @to_timestamp != 0
+      parameters_for_wayback_machine_api += "&to=" + @to_timestamp.to_s
+    end
+    index_file_list_raw = open ("http://web.archive.org/cdx/search/xd?url=#{@base_url}" + parameters_for_wayback_machine_api)
+    all_file_list_raw = open ("http://web.archive.org/cdx/search/xd?url=#{@base_url}/*" + parameters_for_wayback_machine_api)
     file_list_curated = Hash.new
     [index_file_list_raw, all_file_list_raw].each do |file|
       file.each_line do |line|
         line = line.split(' ')
-        file_timestamp = line[1].to_i
-        file_url = line[2]
+        file_timestamp = line[0].to_i
+        file_url = line[1]
         file_id = file_url.split('/')[3..-1].join('/')
         file_id = CGI::unescape file_id
         file_id = file_id.tidy_bytes unless file_id == ""
         if file_id.nil?
           puts "Malformed file url, ignoring: #{file_url}"
-        elsif @timestamp == 0 or file_timestamp <= @timestamp
+        else
           if match_exclude_filter(file_url)
             puts "File url matches exclude filter, ignoring: #{file_url}"
           elsif not match_only_filter(file_url)
