@@ -30,6 +30,10 @@ option_parser = OptionParser.new do |opts|
     options[:exclude_filter] = t
   end
 
+  opts.on("-a", "--all", "Expand downloading to error files (40x and 50x) and redirections (30x)") do |t|
+    options[:all] = true
+  end
+
   opts.on("-v", "--version", "Display version") do |t|
     options[:version] = t
   end

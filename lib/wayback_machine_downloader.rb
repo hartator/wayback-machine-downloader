@@ -10,7 +10,7 @@ class WaybackMachineDownloader
 
   VERSION = "0.4.1"
 
-  attr_accessor :base_url, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter
+  attr_accessor :base_url, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, :all
 
   def initialize params
     @base_url = params[:base_url]
@@ -18,6 +18,7 @@ class WaybackMachineDownloader
     @to_timestamp = params[:to_timestamp].to_i
     @only_filter = params[:only_filter]
     @exclude_filter = params[:exclude_filter]
+    @all = params[:all]
   end
 
   def backup_name
@@ -55,7 +56,10 @@ class WaybackMachineDownloader
   end
 
   def get_file_list_curated
-    parameters_for_wayback_machine_api = "&fl=timestamp,original&fastLatest=true&filter=statuscode:200&collapse=original"
+    parameters_for_wayback_machine_api = "&fl=timestamp,original&collapse=original"
+    unless @all
+      parameters_for_wayback_machine_api += "&filter=statuscode:200"
+    end
     if @from_timestamp and @from_timestamp != 0
       parameters_for_wayback_machine_api += "&from=" + @from_timestamp.to_s
     end
