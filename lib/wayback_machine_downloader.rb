@@ -112,7 +112,7 @@ class WaybackMachineDownloader
     file_list_by_timestamp = get_file_list_by_timestamp
     if file_list_by_timestamp.count == 0
       puts "No files to download."
-      puts "Possible reaosons:"
+      puts "Possible reasons:"
       puts "\t* Site is not in Wayback Machine Archive."
       puts "\t* From timestamp too much in the future." if @from_timestamp and @from_timestamp != 0 
       puts "\t* To timestamp too much in the past." if @to_timestamp and @to_timestamp != 0 
