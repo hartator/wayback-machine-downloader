@@ -34,6 +34,10 @@ option_parser = OptionParser.new do |opts|
     options[:all] = true
   end
 
+  opts.on("-l", "--list", "Only list file urls in a JSON format with the archived timestamps. Won't download anything.") do |t|
+    options[:list] = true
+  end
+
   opts.on("-v", "--version", "Display version") do |t|
     options[:version] = t
   end
@@ -42,7 +46,11 @@ end.parse!
 if (base_url = ARGV[-1])
   options[:base_url] = base_url
   wayback_machine_downloader = WaybackMachineDownloader.new options
-  wayback_machine_downloader.download_files
+  if wayback_machine_downloader.list
+    wayback_machine_downloader.list_files
+  else
+    wayback_machine_downloader.download_files
+  end
 elsif options[:version]
   puts WaybackMachineDownloader::VERSION
 else

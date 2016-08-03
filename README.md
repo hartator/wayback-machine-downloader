@@ -33,6 +33,7 @@ It will download the last version of every file present on Wayback Machine to `.
         -o, --only ONLY_FILTER           Restrict downloading to urls that match this filter (use // notation for the filter to be treated as a regex)
         -x, --exclude EXCLUDE_FILTER     Skip downloading of urls that match this filter (use // notation for the filter to be treated as a regex)
         -a, --all                        Expand downloading to error files (40x and 50x) and redirections (30x)
+     	-l, --list                       Only list file urls in a JSON format with the archived timestamps. Won't download anything.
         -v, --version                    Display version
 
 ## From Timestamp
@@ -94,6 +95,16 @@ Optional. By default, Wayback Machine Downloader limits itself to files that res
 Example:
 
     wayback_machine_downloader http://example.com --all
+
+## Only list files without downloading
+
+     -l, --list
+
+It will just display the files to be downloaded with their snapshot timestamps and urls. The output format is JSON. It won't download anything. It's useful for debugging or to connect to another application.
+
+Example:
+
+    wayback_machine_downloader http://example.com --list
 
 ## Using the Docker image
 

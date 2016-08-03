@@ -3,14 +3,15 @@
 require 'open-uri'
 require 'fileutils'
 require 'cgi'
+require 'json'
 require_relative 'wayback_machine_downloader/tidy_bytes'
 require_relative 'wayback_machine_downloader/to_regex'
 
 class WaybackMachineDownloader
 
-  VERSION = "0.4.3"
+  VERSION = "0.4.4"
 
-  attr_accessor :base_url, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, :all
+  attr_accessor :base_url, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, :all, :list
 
   def initialize params
     @base_url = params[:base_url]
@@ -19,6 +20,7 @@ class WaybackMachineDownloader
     @only_filter = params[:only_filter]
     @exclude_filter = params[:exclude_filter]
     @all = params[:all]
+    @list = params[:list]
   end
 
   def backup_name
@@ -104,6 +106,14 @@ class WaybackMachineDownloader
       file_remote_info[1][:file_id] = file_remote_info[0]
       file_remote_info[1]
     end
+  end
+
+  def list_files
+    puts "["
+    get_file_list_by_timestamp.each do |file|
+      puts file.to_json + ","
+    end
+    puts "]"
   end
 
   def download_files
