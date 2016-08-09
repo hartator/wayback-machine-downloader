@@ -160,7 +160,10 @@ class WaybackMachineDownloader
               end
             rescue OpenURI::HTTPError => e
               puts "#{file_url} # #{e}"
-              file.write(e.io.read)
+              if @all
+                file.write(e.io.read)
+                puts "#{file_path} saved anyway."
+              end
             rescue StandardError => e
               puts "#{file_url} # #{e}"
             end
