@@ -170,6 +170,11 @@ class WaybackMachineDownloader
           end
         rescue StandardError => e
           puts "#{file_url} # #{e}"
+        ensure
+          if File.size(file_path) == 0 and not @all
+            File.delete(file_path)
+            puts "#{file_path} was empty and was removed."
+          end
         end
         puts "#{file_url} -> #{file_path} (#{count}/#{file_list_by_timestamp.size})"
       else
