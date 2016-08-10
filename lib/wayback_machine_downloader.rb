@@ -171,7 +171,7 @@ class WaybackMachineDownloader
         rescue StandardError => e
           puts "#{file_url} # #{e}"
         ensure
-          if File.size(file_path) == 0 and not @all
+          if not @all and File.exists?(file_path) and File.size(file_path) == 0
             File.delete(file_path)
             puts "#{file_path} was empty and was removed."
           end
