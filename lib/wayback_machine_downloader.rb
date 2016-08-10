@@ -9,7 +9,7 @@ require_relative 'wayback_machine_downloader/to_regex'
 
 class WaybackMachineDownloader
 
-  VERSION = "0.4.7"
+  VERSION = "0.4.8"
 
   attr_accessor :base_url, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, :all, :list
 
