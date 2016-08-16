@@ -24,7 +24,11 @@ class WaybackMachineDownloader
   end
 
   def backup_name
-    @base_url.split('/')[2]
+    if @base_url.include? '//'
+      @base_url.split('/')[2]
+    else
+      @base_url
+    end
   end
 
   def backup_path
