@@ -16,6 +16,15 @@ class WaybackMachineDownloaderTest < Minitest::Test
     assert_equal 'http://www.onlyfreegames.net', @wayback_machine_downloader.base_url
   end
 
+  def test_backup_name_being_set
+    assert_equal 'www.onlyfreegames.net', @wayback_machine_downloader.backup_name
+  end
+
+  def test_backup_name_being_set_when_base_url_is_domain
+    @wayback_machine_downloader.base_url = 'www.onlyfreegames.net'
+    assert_equal 'www.onlyfreegames.net', @wayback_machine_downloader.backup_name
+  end
+
   def test_file_list_curated
     assert_equal 20081120203712, @wayback_machine_downloader.get_file_list_curated["linux.htm"][:timestamp]
   end
