@@ -129,6 +129,6 @@ To run the tests:
 
 Wayback Machine Downloader is free and open source.
 
-If you want to donate: [![Gratipay Team](https://img.shields.io/gratipay/team/hartator.svg?maxAge=2592000)](https://gratipay.com/hartator/)
+If you want to donate: [![Gratipay Team](https://img.shields.io/gratipay/team/hartator.svg)](https://gratipay.com/hartator/)
 
 You can also donate to the Archive.org: https://archive.org/donate/
