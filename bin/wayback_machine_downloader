@@ -38,6 +38,10 @@ option_parser = OptionParser.new do |opts|
     options[:list] = true
   end
 
+  opts.on("--threads NUMBER", Integer, "Number of threads to use while downloading website (ie. 20)") do |t|
+    options[:threads_count] = t
+  end
+
   opts.on("-v", "--version", "Display version") do |t|
     options[:version] = t
   end

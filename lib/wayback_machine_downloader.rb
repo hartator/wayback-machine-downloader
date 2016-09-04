@@ -11,7 +11,7 @@ class WaybackMachineDownloader
 
   VERSION = "0.4.9"
 
-  attr_accessor :base_url, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, :all, :list
+  attr_accessor :base_url, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, :all, :list, :threads_count
 
   def initialize params
     @base_url = params[:base_url]
@@ -21,6 +21,7 @@ class WaybackMachineDownloader
     @exclude_filter = params[:exclude_filter]
     @all = params[:all]
     @list = params[:list]
+    @threads_count = params[:threads_count].to_i
   end
 
   def backup_name
@@ -121,72 +122,35 @@ class WaybackMachineDownloader
   end
 
   def download_files
+    start_time = Time.now
     puts "Downloading #{@base_url} to #{backup_path} from Wayback Machine..."
     puts
-    file_list_by_timestamp = get_file_list_by_timestamp
+
     if file_list_by_timestamp.count == 0
       puts "No files to download."
       puts "Possible reasons:"
       puts "\t* Site is not in Wayback Machine Archive."
-      puts "\t* From timestamp too much in the future." if @from_timestamp and @from_timestamp != 0 
-      puts "\t* To timestamp too much in the past." if @to_timestamp and @to_timestamp != 0 
+      puts "\t* From timestamp too much in the future." if @from_timestamp and @from_timestamp != 0
+      puts "\t* To timestamp too much in the past." if @to_timestamp and @to_timestamp != 0
       puts "\t* Only filter too restrictive (#{only_filter.to_s})" if @only_filter
       puts "\t* Exclude filter too wide (#{exclude_filter.to_s})" if @exclude_filter
       return
     end
-    count = 0
-    file_list_by_timestamp.each do |file_remote_info|
-      count += 1
-      file_url = file_remote_info[:file_url]
-      file_id = file_remote_info[:file_id]
-      file_timestamp = file_remote_info[:timestamp]
-      file_path_elements = file_id.split('/')
-      if file_id == ""
-        dir_path = backup_path
-        file_path = backup_path + 'index.html'
-      elsif file_url[-1] == '/' or not file_path_elements[-1].include? '.'
-        dir_path = backup_path + file_path_elements[0..-1].join('/')
-        file_path = backup_path + file_path_elements[0..-1].join('/') + '/index.html'
-      else
-        dir_path = backup_path + file_path_elements[0..-2].join('/')
-        file_path = backup_path + file_path_elements[0..-1].join('/')
-      end
-      if Gem.win_platform?
-        file_path = file_path.gsub(/[:*?&=<>\\|]/) {|s| '%' + s.ord.to_s(16) }
-      end
-      unless File.exists? file_path
-        begin
-          structure_dir_path dir_path
-          open(file_path, "wb") do |file|
-            begin
-              open("http://web.archive.org/web/#{file_timestamp}id_/#{file_url}", "Accept-Encoding" => "plain") do |uri|
-                file.write(uri.read)
-              end
-            rescue OpenURI::HTTPError => e
-              puts "#{file_url} # #{e}"
-              if @all
-                file.write(e.io.read)
-                puts "#{file_path} saved anyway."
-              end
-            rescue StandardError => e
-              puts "#{file_url} # #{e}"
-            end
-          end
-        rescue StandardError => e
-          puts "#{file_url} # #{e}"
-        ensure
-          if not @all and File.exists?(file_path) and File.size(file_path) == 0
-            File.delete(file_path)
-            puts "#{file_path} was empty and was removed."
-          end
+
+    threads = []
+    [@threads_count, 1].max.times do
+      threads << Thread.new do
+        until file_queue.empty?
+          file_remote_info = file_queue.pop(true) rescue nil
+          download_file(file_remote_info) if file_remote_info
         end
-        puts "#{file_url} -> #{file_path} (#{count}/#{file_list_by_timestamp.size})"
-      else
-        puts "#{file_url} # #{file_path} already exists. (#{count}/#{file_list_by_timestamp.size})"
       end
     end
+
+    threads.each(&:join)
+    end_time = Time.now
     puts
-    puts "Download complete, saved in #{backup_path} (#{file_list_by_timestamp.size} files)"
+    puts "Download complete in #{end_time - start_time}s, saved in #{backup_path} (#{file_list_by_timestamp.size} files)"
   end
 
   def structure_dir_path dir_path
@@ -212,4 +176,74 @@ class WaybackMachineDownloader
     end
   end
 
+  private
+
+  def download_file file_remote_info
+    @processed_file_count ||= 0
+    file_url = file_remote_info[:file_url]
+    file_id = file_remote_info[:file_id]
+    file_timestamp = file_remote_info[:timestamp]
+    file_path_elements = file_id.split('/')
+    if file_id == ""
+      dir_path = backup_path
+      file_path = backup_path + 'index.html'
+    elsif file_url[-1] == '/' or not file_path_elements[-1].include? '.'
+      dir_path = backup_path + file_path_elements[0..-1].join('/')
+      file_path = backup_path + file_path_elements[0..-1].join('/') + '/index.html'
+    else
+      dir_path = backup_path + file_path_elements[0..-2].join('/')
+      file_path = backup_path + file_path_elements[0..-1].join('/')
+    end
+    if Gem.win_platform?
+      file_path = file_path.gsub(/[:*?&=<>\\|]/) {|s| '%' + s.ord.to_s(16) }
+    end
+    unless File.exists? file_path
+      begin
+        structure_dir_path dir_path
+        open(file_path, "wb") do |file|
+          begin
+            open("http://web.archive.org/web/#{file_timestamp}id_/#{file_url}", "Accept-Encoding" => "plain") do |uri|
+              file.write(uri.read)
+            end
+          rescue OpenURI::HTTPError => e
+            puts "#{file_url} # #{e}"
+            if @all
+              file.write(e.io.read)
+              puts "#{file_path} saved anyway."
+            end
+          rescue StandardError => e
+            puts "#{file_url} # #{e}"
+          end
+        end
+      rescue StandardError => e
+        puts "#{file_url} # #{e}"
+      ensure
+        if not @all and File.exists?(file_path) and File.size(file_path) == 0
+          File.delete(file_path)
+          puts "#{file_path} was empty and was removed."
+        end
+      end
+      semaphore.synchronize do
+        @processed_file_count += 1
+        puts "#{file_url} -> #{file_path} (#{@processed_file_count}/#{file_list_by_timestamp.size})"
+      end
+    else
+      semaphore.synchronize do
+        @processed_file_count += 1
+        puts "#{file_url} # #{file_path} already exists. (#{@processed_file_count}/#{file_list_by_timestamp.size})"
+      end
+    end
+  end
+
+  def file_queue
+    @file_queue ||= file_list_by_timestamp.each_with_object(Queue.new) { |file_info, q| q << file_info }
+  end
+
+  def file_list_by_timestamp
+    @file_list_by_timestamp ||= get_file_list_by_timestamp
+  end
+
+  def semaphore
+    @semaphore ||= Mutex.new
+  end
 end
