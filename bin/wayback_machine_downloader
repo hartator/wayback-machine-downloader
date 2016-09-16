@@ -38,6 +38,10 @@ option_parser = OptionParser.new do |opts|
     options[:list] = true
   end
 
+  opts.on("-c", "--concurrency NUMBER", Integer, "Number of multiple files to dowload at a time. Default is one file at a time. (ie. 20)") do |t|
+    options[:threads_count] = t
+  end
+
   opts.on("-v", "--version", "Display version") do |t|
     options[:version] = t
   end
