@@ -73,8 +73,8 @@ class WaybackMachineDownloader
     if @to_timestamp and @to_timestamp != 0
       parameters_for_wayback_machine_api += "&to=" + @to_timestamp.to_s
     end
-    index_file_list_raw = open ("http://web.archive.org/cdx/search/xd?url=#{@base_url}" + parameters_for_wayback_machine_api)
-    all_file_list_raw = open ("http://web.archive.org/cdx/search/xd?url=#{@base_url}/*" + parameters_for_wayback_machine_api)
+    index_file_list_raw = open("http://web.archive.org/cdx/search/xd?url=#{@base_url}" + parameters_for_wayback_machine_api)
+    all_file_list_raw = open("http://web.archive.org/cdx/search/xd?url=#{@base_url}/*" + parameters_for_wayback_machine_api)
     file_list_curated = Hash.new
     [index_file_list_raw, all_file_list_raw].each do |file|
       file.each_line do |line|
