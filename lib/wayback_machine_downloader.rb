@@ -152,7 +152,7 @@ class WaybackMachineDownloader
     threads.each(&:join)
     end_time = Time.now
     puts
-    puts "Download complete in #{end_time - start_time}s, saved in #{backup_path} (#{file_list_by_timestamp.size} files)"
+    puts "Download completed in #{(end_time - start_time).round(2)}s, saved in #{backup_path} (#{file_list_by_timestamp.size} files)"
   end
 
   def structure_dir_path dir_path
