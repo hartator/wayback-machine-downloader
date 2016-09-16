@@ -78,10 +78,9 @@ class WaybackMachineDownloader
     file_list_curated = Hash.new
     [index_file_list_raw, all_file_list_raw].each do |file|
       file.each_line do |line|
-        next if line.size < 20
         file_timestamp = line[0..13].to_i
         file_url = line[15..-2]
-        file_id = file_url.split('/')[3..-1].join('/')
+        file_id = file_url.split('/')[3..-1].join('/') rescue nil
         file_id = CGI::unescape file_id
         file_id = file_id.tidy_bytes unless file_id == ""
         if file_id.nil?

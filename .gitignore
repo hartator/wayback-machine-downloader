@@ -24,3 +24,5 @@ tmp
 
 ## RUBINIUS
 *.rbc
+
+test.rb
