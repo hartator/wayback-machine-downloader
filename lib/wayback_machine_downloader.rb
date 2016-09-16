@@ -78,12 +78,11 @@ class WaybackMachineDownloader
     file_list_curated = Hash.new
     [index_file_list_raw, all_file_list_raw].each do |file|
       file.each_line do |line|
-        line = line.split(' ')
+        line = line.tidy_bytes.split(' ')
         file_timestamp = line[0].to_i
         file_url = line[1]
         file_id = file_url.split('/')[3..-1].join('/')
         file_id = CGI::unescape file_id
-        file_id = file_id.tidy_bytes unless file_id == ""
         if file_id.nil?
           puts "Malformed file url, ignoring: #{file_url}"
         else
