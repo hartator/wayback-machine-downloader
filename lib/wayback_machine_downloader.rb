@@ -138,7 +138,9 @@ class WaybackMachineDownloader
     end
 
     threads = []
-    [@threads_count, 1].max.times do
+    @processed_file_count = 0
+    @threads_count = 1 unless @threads_count != 0
+    @threads_count.times do
       threads << Thread.new do
         until file_queue.empty?
           file_remote_info = file_queue.pop(true) rescue nil
@@ -176,10 +178,7 @@ class WaybackMachineDownloader
     end
   end
 
-  private
-
   def download_file file_remote_info
-    @processed_file_count ||= 0
     file_url = file_remote_info[:file_url]
     file_id = file_remote_info[:file_id]
     file_timestamp = file_remote_info[:timestamp]
