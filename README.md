@@ -28,14 +28,14 @@ It will download the last version of every file present on Wayback Machine to `.
     Download an entire website from the Wayback Machine.
 
     Optional options:
-        -f, --from TIMESTAMP             Only files on or after timestamp supplied (ie. 20060716231334)
-        -t, --to TIMESTAMP               Only files on or before timestamp supplied (ie. 20100916231334)
-        -o, --only ONLY_FILTER           Restrict downloading to urls that match this filter (use // notation for the filter to be treated as a regex)
-        -x, --exclude EXCLUDE_FILTER     Skip downloading of urls that match this filter (use // notation for the filter to be treated as a regex)
-        -a, --all                        Expand downloading to error files (40x and 50x) and redirections (30x)
-     	-l, --list                       Only list file urls in a JSON format with the archived timestamps. Won't download anything.
-            --threads NUMBER             Number of threads to use while downloading website (ie. 20)
-        -v, --version                    Display version
+          -f, --from TIMESTAMP             Only files on or after timestamp supplied (ie. 20060716231334)
+          -t, --to TIMESTAMP               Only files on or before timestamp supplied (ie. 20100916231334)
+          -o, --only ONLY_FILTER           Restrict downloading to urls that match this filter (use // notation for the filter to be treated as a regex)
+          -x, --exclude EXCLUDE_FILTER     Skip downloading of urls that match this filter (use // notation for the filter to be treated as a regex)
+          -a, --all                        Expand downloading to error files (40x and 50x) and redirections (30x)
+          -l, --list                       Only list file urls in a JSON format with the archived timestamps. Won't download anything.
+          -c, --concurrency NUMBER         Number of multiple files to download at a time. Default is one file at a time. (ie. 20)
+          -v, --version                    Display version
 
 ## From Timestamp
 
@@ -107,15 +107,15 @@ Example:
 
     wayback_machine_downloader http://example.com --list
 
-## Download using ruby green threads
+## Download multiple files at a time
 
-    --threads NUMBER
+    -c, --concurrency NUMBER  
 
-Optional. Default is 1. Number of threads to use while downloading website.
+Optional. Specify the number of multiple files you want to download at the same time. Allows to speed up the download of a website significantly. Default is to download one file at the time.
 
 Example:
 
-    wayback_machine_downloader http://example.com --threads 20
+    wayback_machine_downloader http://example.com --concurrency 20
 
 ## Using the Docker image
 
