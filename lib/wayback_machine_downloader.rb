@@ -78,6 +78,7 @@ class WaybackMachineDownloader
     file_list_curated = Hash.new
     [index_file_list_raw, all_file_list_raw].each do |file|
       file.each_line do |line|
+        next if line.size < 20
         file_timestamp = line[0..13].to_i
         file_url = line[15..-2]
         file_id = file_url.split('/')[3..-1].join('/')
