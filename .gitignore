@@ -5,6 +5,7 @@ doc
 rdoc
 log
 websites
+.DS_Store
 
 ## BUNDLER
 *.gem
