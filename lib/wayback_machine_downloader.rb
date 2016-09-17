@@ -1,5 +1,6 @@
 # encoding: UTF-8
 
+require 'net/http'
 require 'open-uri'
 require 'fileutils'
 require 'cgi'
