@@ -19,7 +19,7 @@ Run wayback_machine_downloader with the base url of the website you want to retr
 
 ## How it works
 
-It will download the last version of every file present on Wayback Machine to `./websites/example.com/`. It will also re-create a directory structure and auto-create `index.html` pages to work seamlessly with Apache and Nginx. All files downloaded are the original ones and not Wayback Machine rewritten versions. This way, URLs and links structure are the same than before.
+It will download the last version of every file present on Wayback Machine to `./websites/example.com/`. It will also re-create a directory structure and auto-create `index.html` pages to work seamlessly with Apache and Nginx. All files downloaded are the original ones and not Wayback Machine rewritten versions. This way, URLs and links structure are the same as before.
 
 ## Advanced Usage
 
@@ -28,14 +28,14 @@ It will download the last version of every file present on Wayback Machine to `.
 	Download an entire website from the Wayback Machine.
 	
 	Optional options:
-	    -d, --directory PATH             Directory to save the downloaded files to. Default is ./websites/ plus the 	domain name.
+	    -d, --directory PATH             Directory to save the downloaded files to. Default is ./websites/ plus the domain name.
 	    -f, --from TIMESTAMP             Only files on or after timestamp supplied (ie. 20060716231334)
 	    -t, --to TIMESTAMP               Only files on or before timestamp supplied (ie. 20100916231334)
-	    -o, --only ONLY_FILTER           Restrict downloading to urls that match this filter (use // notation for 	the filter to be treated as a regex)
-	    -x, --exclude EXCLUDE_FILTER     Skip downloading of urls that match this filter (use // notation for the 	filter to be treated as a regex)
+	    -o, --only ONLY_FILTER           Restrict downloading to urls that match this filter (use // notation for the filter to be treated as a regex)
+	    -x, --exclude EXCLUDE_FILTER     Skip downloading of urls that match this filter (use // notation for the filter to be treated as a regex)
 	    -a, --all                        Expand downloading to error files (40x and 50x) and redirections (30x)
-	    -c, --concurrency NUMBER         Number of multiple files to dowload at a time. Default is one file at a 	time. (ie. 20)
-	    -l, --list                       Only list file urls in a JSON format with the archived timestamps. Won't 	download anything.
+	    -c, --concurrency NUMBER         Number of multiple files to dowload at a time. Default is one file at a time. (ie. 20)
+	    -l, --list                       Only list file urls in a JSON format with the archived timestamps. Won't download anything.
 	    -v, --version                    Display version
 	    
 ## Specify directory to save files to
@@ -122,7 +122,7 @@ Example:
 
     -c, --concurrency NUMBER  
 
-Optional. Specify the number of multiple files you want to download at the same time. Allows to speed up the download of a website significantly. Default is to download one file at the time.
+Optional. Specify the number of multiple files you want to download at the same time. Allows to speed up the download of a website significantly. Default is to download one file at a time.
 
 Example:
 
