@@ -11,10 +11,11 @@ class WaybackMachineDownloader
 
   VERSION = "0.5.3"
 
-  attr_accessor :base_url, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, :all, :list, :threads_count
+  attr_accessor :base_url, :directory, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, :all, :list, :threads_count
 
   def initialize params
     @base_url = params[:base_url]
+    @directory = params[:directory]
     @from_timestamp = params[:from_timestamp].to_i
     @to_timestamp = params[:to_timestamp].to_i
     @only_filter = params[:only_filter]
@@ -33,7 +34,15 @@ class WaybackMachineDownloader
   end
 
   def backup_path
-    'websites/' + backup_name + '/'
+    if @directory
+      if @directory[-1] == '/'
+        @directory
+      else
+        @directory + '/'
+      end
+    else
+      'websites/' + backup_name + '/'
+    end
   end
 
   def match_only_filter file_url
