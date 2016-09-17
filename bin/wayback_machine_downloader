@@ -14,6 +14,10 @@ option_parser = OptionParser.new do |opts|
   opts.separator ""
   opts.separator "Optional options:"
 
+  opts.on("-d", "--directory PATH", String, "Directory to save the downloaded files to. Default is ./websites/ plus the domain name.") do |t|
+    options[:directory] = t
+  end
+
   opts.on("-f", "--from TIMESTAMP", Integer, "Only files on or after timestamp supplied (ie. 20060716231334)") do |t|
     options[:from_timestamp] = t
   end
