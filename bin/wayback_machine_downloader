@@ -14,7 +14,7 @@ option_parser = OptionParser.new do |opts|
   opts.separator ""
   opts.separator "Optional options:"
 
-  opts.on("-d", "--directory PATH", String, "Directory to save the downloaded files to. Default is ./websites/ plus the domain name.") do |t|
+  opts.on("-d", "--directory PATH", String, "Directory to save the downloaded files into\n\t\t\t\t     Default is ./websites/ plus the domain name") do |t|
     options[:directory] = t
   end
 
@@ -26,11 +26,11 @@ option_parser = OptionParser.new do |opts|
     options[:to_timestamp] = t
   end
 
-  opts.on("-o", "--only ONLY_FILTER", String, "Restrict downloading to urls that match this filter (use // notation for the filter to be treated as a regex)") do |t|
+  opts.on("-o", "--only ONLY_FILTER", String, "Restrict downloading to urls that match this filter\n\t\t\t\t     (use // notation for the filter to be treated as a regex)") do |t|
     options[:only_filter] = t
   end
 
-  opts.on("-x", "--exclude EXCLUDE_FILTER", String, "Skip downloading of urls that match this filter (use // notation for the filter to be treated as a regex)") do |t|
+  opts.on("-x", "--exclude EXCLUDE_FILTER", String, "Skip downloading of urls that match this filter\n\t\t\t\t     (use // notation for the filter to be treated as a regex)") do |t|
     options[:exclude_filter] = t
   end
 
@@ -38,7 +38,7 @@ option_parser = OptionParser.new do |opts|
     options[:all] = true
   end
 
-  opts.on("-c", "--concurrency NUMBER", Integer, "Number of multiple files to dowload at a time. Default is one file at a time. (ie. 20)") do |t|
+  opts.on("-c", "--concurrency NUMBER", Integer, "Number of multiple files to dowload at a time\n\t\t\t\t     Default is one file at a time (ie. 20)") do |t|
     options[:threads_count] = t
   end
 
