@@ -42,7 +42,11 @@ option_parser = OptionParser.new do |opts|
     options[:threads_count] = t
   end
 
-  opts.on("-l", "--list", "Only list file urls in a JSON format with the archived timestamps. Won't download anything.") do |t|
+  opts.on("-p", "--maximum-snapshot NUMBER", Integer, "Maximum snapshot pages to consider (Default is 100)\n\t\t\t\t     Count an average of 150,000 snapshots per page ") do |t|
+    options[:maximum_pages] = t
+  end
+
+  opts.on("-l", "--list", "Only list file urls in a JSON format with the archived timestamps, won't download anything.") do |t|
     options[:list] = true
   end
 
