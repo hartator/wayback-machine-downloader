@@ -15,7 +15,7 @@ class WaybackMachineDownloader
 
   VERSION = "1.0.0"
 
-  attr_accessor :base_url, :directory, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, :all, :list, :threads_count
+  attr_accessor :base_url, :directory, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, :all, :list, :maximum_pages, :threads_count
 
   def initialize params
     @base_url = params[:base_url]
@@ -26,6 +26,7 @@ class WaybackMachineDownloader
     @exclude_filter = params[:exclude_filter]
     @all = params[:all]
     @list = params[:list]
+    @maximum_pages = params[:maximum_pages] ? params[:maximum_pages].to_i : 100
     @threads_count = params[:threads_count].to_i
   end
 
@@ -75,32 +76,44 @@ class WaybackMachineDownloader
     end
   end
 
+  def get_all_snapshots_to_consider
+    print "Getting snapshot pages"
+    snapshot_list_to_consider = ""
+    snapshot_list_to_consider += get_raw_list_from_api(@base_url, nil)
+    print "."
+    @maximum_pages.times do |page_index|
+      snapshot_list = get_raw_list_from_api(@base_url + '/*', page_index)
+      break if snapshot_list.empty?
+      snapshot_list_to_consider += snapshot_list
+      print "."
+    end
+    puts " found #{snapshot_list_to_consider.lines.count} snaphots to consider."
+    puts
+    snapshot_list_to_consider
+  end
+
   def get_file_list_curated
-    index_file_list_raw = get_raw_list_from_api(@base_url)
-    all_file_list_raw = get_raw_list_from_api(@base_url + '/*')
     file_list_curated = Hash.new
-    [index_file_list_raw, all_file_list_raw].each do |file|
-      file.each_line do |line|
-        next unless line.include?('/')
-        file_timestamp = line[0..13].to_i
-        file_url = line[15..-2]
-        file_id = file_url.split('/')[3..-1].join('/')
-        file_id = CGI::unescape file_id 
-        file_id = file_id.tidy_bytes unless file_id == ""
-        if file_id.nil?
-          puts "Malformed file url, ignoring: #{file_url}"
-        else
-          if match_exclude_filter(file_url)
-            puts "File url matches exclude filter, ignoring: #{file_url}"
-          elsif not match_only_filter(file_url)
-            puts "File url doesn't match only filter, ignoring: #{file_url}"
-          elsif file_list_curated[file_id]
-            unless file_list_curated[file_id][:timestamp] > file_timestamp
-              file_list_curated[file_id] = {file_url: file_url, timestamp: file_timestamp}
-            end
-          else
+    get_all_snapshots_to_consider.each_line do |line|
+      next unless line.include?('/')
+      file_timestamp = line[0..13].to_i
+      file_url = line[15..-2]
+      file_id = file_url.split('/')[3..-1].join('/')
+      file_id = CGI::unescape file_id 
+      file_id = file_id.tidy_bytes unless file_id == ""
+      if file_id.nil?
+        puts "Malformed file url, ignoring: #{file_url}"
+      else
+        if match_exclude_filter(file_url)
+          puts "File url matches exclude filter, ignoring: #{file_url}"
+        elsif not match_only_filter(file_url)
+          puts "File url doesn't match only filter, ignoring: #{file_url}"
+        elsif file_list_curated[file_id]
+          unless file_list_curated[file_id][:timestamp] > file_timestamp
             file_list_curated[file_id] = {file_url: file_url, timestamp: file_timestamp}
           end
+        else
+          file_list_curated[file_id] = {file_url: file_url, timestamp: file_timestamp}
         end
       end
     end
@@ -126,7 +139,7 @@ class WaybackMachineDownloader
 
   def download_files
     start_time = Time.now
-    puts "Downloading #{@base_url} to #{backup_path} from Wayback Machine..."
+    puts "Downloading #{@base_url} to #{backup_path} from Wayback Machine archives."
     puts
 
     if file_list_by_timestamp.count == 0
@@ -139,6 +152,8 @@ class WaybackMachineDownloader
       puts "\t* Exclude filter too wide (#{exclude_filter.to_s})" if @exclude_filter
       return
     end
+ 
+    puts "#{file_list_by_timestamp.count} files to download:"
 
     threads = []
     @processed_file_count = 0
