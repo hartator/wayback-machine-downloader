@@ -26,20 +26,28 @@ It will download the last version of every file present on Wayback Machine to `.
 
 ## Advanced Usage
 
-	Usage: wayback_machine_downloader http://example.com
-	
-	Download an entire website from the Wayback Machine.
-	
-	Optional options:
-	    -d, --directory PATH             Directory to save the downloaded files to. Default is ./websites/ plus the domain name.
-	    -f, --from TIMESTAMP             Only files on or after timestamp supplied (ie. 20060716231334)
-	    -t, --to TIMESTAMP               Only files on or before timestamp supplied (ie. 20100916231334)
-	    -o, --only ONLY_FILTER           Restrict downloading to urls that match this filter (use // notation for the filter to be treated as a regex)
-	    -x, --exclude EXCLUDE_FILTER     Skip downloading of urls that match this filter (use // notation for the filter to be treated as a regex)
-	    -a, --all                        Expand downloading to error files (40x and 50x) and redirections (30x)
-	    -c, --concurrency NUMBER         Number of multiple files to dowload at a time. Default is one file at a time. (ie. 20)
-	    -l, --list                       Only list file urls in a JSON format with the archived timestamps. Won't download anything.
-	    -v, --version                    Display version
+    Usage: wayback_machine_downloader http://example.com
+
+    Download an entire website from the Wayback Machine.
+
+    Optional options:
+        -d, --directory PATH             Directory to save the downloaded files into
+                         Default is ./websites/ plus the domain name
+        -f, --from TIMESTAMP             Only files on or after timestamp supplied (ie. 20060716231334)
+        -t, --to TIMESTAMP               Only files on or before timestamp supplied (ie. 20100916231334)
+        -o, --only ONLY_FILTER           Restrict downloading to urls that match this filter
+                         (use // notation for the filter to be treated as a regex)
+        -x, --exclude EXCLUDE_FILTER     Skip downloading of urls that match this filter
+                         (use // notation for the filter to be treated as a regex)
+        -a, --all                        Expand downloading to error files (40x and 50x) and redirections (30x)
+        -c, --concurrency NUMBER         Number of multiple files to dowload at a time
+                         Default is one file at a time (ie. 20)
+        -p, --snapshot-pages NUMBER       Maximum snapshot pages to consider (Default is 100)
+                         Count an average of 150,000 snapshots per page 
+        -l, --list                       Only list file urls in a JSON format with the archived timestamps, won't download anything.
+        -v, --version                    Display version
+
+
 	    
 ## Specify directory to save files to
 
@@ -120,6 +128,16 @@ It will just display the files to be downloaded with their snapshot timestamps a
 Example:
 
     wayback_machine_downloader http://example.com --list
+
+## Maximum number of snapshot pages to consider
+
+    -p, --snapshot-pages NUMBER    
+
+Optional. Specify the maximum number of snapshot pages to consider. Count an average of 150,000 snapshots per page. 100 is the default maximum number of snapshot pages and should be sufficient for most websites. Use a bigger number if you want to download a very large website.
+
+Example:
+
+    wayback_machine_downloader http://example.com --snapshot-pages 300    
 
 ## Download multiple files at a time
 
