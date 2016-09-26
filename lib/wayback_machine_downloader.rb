@@ -77,7 +77,7 @@ class WaybackMachineDownloader
   end
 
   def get_all_snapshots_to_consider
-    # Note: Passing a page index parameter allow us to get more snapshot, but from a less fresh index
+    # Note: Passing a page index parameter allow us to get more snapshots, but from a less fresh index
     print "Getting snapshot pages"
     snapshot_list_to_consider = ""
     snapshot_list_to_consider += get_raw_list_from_api(@base_url, nil)
