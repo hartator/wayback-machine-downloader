@@ -31,11 +31,11 @@ class WaybackMachineDownloaderTest < Minitest::Test
 
   def test_file_list_by_timestamp
     file_expected = {
-      file_id: "Fs-06.jpg",
-      file_url: "http://www.onlyfreegames.net:80/Fs-06.jpg",
-      timestamp: 20060716125343
+      file_url: "http://www.onlyfreegames.net:80/strat.html",
+      timestamp: 20060111084756,
+      file_id: "strat.html"
     }
-    assert_equal file_expected, @wayback_machine_downloader.get_file_list_by_timestamp[-1]
+    assert_equal file_expected, @wayback_machine_downloader.get_file_list_by_timestamp[-2]
   end
 
   def test_file_list_only_filter_without_matches
