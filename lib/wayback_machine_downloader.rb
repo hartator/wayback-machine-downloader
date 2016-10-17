@@ -1,5 +1,6 @@
 # encoding: UTF-8
 
+require 'thread'
 require 'net/http'
 require 'open-uri'
 require 'fileutils'
