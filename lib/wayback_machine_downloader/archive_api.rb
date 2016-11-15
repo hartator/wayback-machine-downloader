@@ -4,9 +4,8 @@ module ArchiveAPI
 		request_url = "http://web.archive.org/cdx/search/xd?url="
 		request_url += url
 		request_url += parameters_for_api page_index
-    request_uri = URI.parse request_url
-    response = Net::HTTP.get_response request_uri
-    response.body
+
+    open(request_url).read
 	end
 
 	def parameters_for_api page_index
