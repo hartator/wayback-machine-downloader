@@ -93,9 +93,14 @@ class WaybackMachineDownloaderTest < Minitest::Test
   # Testing encoding conflicts needs a different base_url
   def test_nonascii_suburls_download
     @wayback_machine_downloader = WaybackMachineDownloader.new base_url: 'https://en.wikipedia.org/wiki/%C3%84'
-    # Once for the downloading...
+    # Once just for the downloading...
     @wayback_machine_downloader.download_files
-    # ... and once for the "is already present"
+  end
+
+  def test_nonascii_suburls_already_present
+    @wayback_machine_downloader = WaybackMachineDownloader.new base_url: 'https://en.wikipedia.org/wiki/%C3%84'
+    # ... twice to test the "is already present" case
+    @wayback_machine_downloader.download_files
     @wayback_machine_downloader.download_files
   end
 
