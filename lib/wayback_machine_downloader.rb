@@ -201,7 +201,7 @@ class WaybackMachineDownloader
   end
 
   def download_file file_remote_info
-    file_url = file_remote_info[:file_url]
+    file_url = file_remote_info[:file_url].encode(''.encoding)
     file_id = file_remote_info[:file_id]
     file_timestamp = file_remote_info[:timestamp]
     file_path_elements = file_id.split('/')
