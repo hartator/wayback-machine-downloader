@@ -17,7 +17,7 @@ class WaybackMachineDownloader
   VERSION = "1.1.5"
 
   attr_accessor :base_url, :directory, :from_timestamp, :to_timestamp,
-    :only_filter, :exclude_filter, :all, :list, :maximum_pages, :threads_count
+    :only_filter, :exclude_filter, :all, :maximum_pages, :threads_count
 
   def initialize params
     @base_url = params[:base_url]
@@ -27,7 +27,6 @@ class WaybackMachineDownloader
     @only_filter = params[:only_filter]
     @exclude_filter = params[:exclude_filter]
     @all = params[:all]
-    @list = params[:list]
     @maximum_pages = params[:maximum_pages] ? params[:maximum_pages].to_i : 100
     @threads_count = params[:threads_count].to_i
   end
