@@ -16,7 +16,8 @@ class WaybackMachineDownloader
 
   VERSION = "1.1.5"
 
-  attr_accessor :base_url, :directory, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, :all, :list, :maximum_pages, :threads_count
+  attr_accessor :base_url, :directory, :from_timestamp, :to_timestamp,
+    :only_filter, :exclude_filter, :all, :list, :maximum_pages, :threads_count
 
   def initialize params
     @base_url = params[:base_url]
@@ -78,7 +79,8 @@ class WaybackMachineDownloader
   end
 
   def get_all_snapshots_to_consider
-    # Note: Passing a page index parameter allow us to get more snapshots, but from a less fresh index
+    # Note: Passing a page index parameter allow us to get more snapshots,
+    # but from a less fresh index
     print "Getting snapshot pages"
     snapshot_list_to_consider = ""
     snapshot_list_to_consider += get_raw_list_from_api(@base_url, nil)
