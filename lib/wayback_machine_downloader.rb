@@ -16,11 +16,13 @@ class WaybackMachineDownloader
 
   VERSION = "1.1.5"
 
-  attr_accessor :base_url, :directory, :from_timestamp, :to_timestamp,
+  attr_accessor :base_url, :exact_match, :directory,
+    :from_timestamp, :to_timestamp,
     :only_filter, :exclude_filter, :all, :maximum_pages, :threads_count
 
   def initialize params
     @base_url = params[:base_url]
+    @exact_match = params[:exact_match]
     @directory = params[:directory]
     @from_timestamp = params[:from_timestamp].to_i
     @to_timestamp = params[:to_timestamp].to_i
@@ -84,8 +86,10 @@ class WaybackMachineDownloader
     snapshot_list_to_consider = ""
     snapshot_list_to_consider += get_raw_list_from_api(@base_url, nil)
     print "."
-    snapshot_list_to_consider += get_raw_list_from_api(@base_url + '/*', nil)
-    print "."
+    unless @exact_match
+      snapshot_list_to_consider += get_raw_list_from_api(@base_url + '/*', nil)
+      print "."
+    end
     @maximum_pages.times do |page_index|
       snapshot_list = get_raw_list_from_api(@base_url + '/*', page_index)
       break if snapshot_list.empty?
