@@ -187,7 +187,7 @@ class WaybackMachineDownloader
 
   def structure_dir_path dir_path
     begin
-      FileUtils::mkdir_p dir_path unless File.exists? dir_path
+      FileUtils::mkdir_p dir_path unless File.exist? dir_path
     rescue Errno::EEXIST => e
       error_to_string = e.to_s
       puts "# #{error_to_string}"
@@ -227,7 +227,7 @@ class WaybackMachineDownloader
     if Gem.win_platform?
       file_path = file_path.gsub(/[:*?&=<>\\|]/) {|s| '%' + s.ord.to_s(16) }
     end
-    unless File.exists? file_path
+    unless File.exist? file_path
       begin
         structure_dir_path dir_path
         open(file_path, "wb") do |file|
@@ -248,7 +248,7 @@ class WaybackMachineDownloader
       rescue StandardError => e
         puts "#{file_url} # #{e}"
       ensure
-        if not @all and File.exists?(file_path) and File.size(file_path) == 0
+        if not @all and File.exist?(file_path) and File.size(file_path) == 0
           File.delete(file_path)
           puts "#{file_path} was empty and was removed."
         end
