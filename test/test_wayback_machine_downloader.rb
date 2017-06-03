@@ -85,7 +85,7 @@ class WaybackMachineDownloaderTest < Minitest::Test
     assert_nil @wayback_machine_downloader.get_file_list_curated["linux.htm"]
   end
 
-  def test_file_list_exclude_filter_with_a_regex
+  def test_all_get_file_list_curated_size
     @wayback_machine_downloader.all = true
     assert_equal 69, @wayback_machine_downloader.get_file_list_curated.size
   end
