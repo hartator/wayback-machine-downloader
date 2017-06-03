@@ -39,6 +39,16 @@ class WaybackMachineDownloaderTest < Minitest::Test
     assert_equal file_expected, @wayback_machine_downloader.get_file_list_by_timestamp[-2]
   end
 
+  def test_without_exact_match
+    @wayback_machine_downloader.exact_match = false
+    assert @wayback_machine_downloader.get_file_list_curated.size > 1
+  end
+
+  def test_exact_match
+    @wayback_machine_downloader.exact_match = true
+    assert_equal 1, @wayback_machine_downloader.get_file_list_curated.size
+  end
+
   def test_file_list_only_filter_without_matches
     @wayback_machine_downloader.only_filter = 'abc123'
     assert_equal 0, @wayback_machine_downloader.get_file_list_curated.size

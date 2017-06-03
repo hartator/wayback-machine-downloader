@@ -87,14 +87,12 @@ class WaybackMachineDownloader
     snapshot_list_to_consider += get_raw_list_from_api(@base_url, nil)
     print "."
     unless @exact_match
-      snapshot_list_to_consider += get_raw_list_from_api(@base_url + '/*', nil)
-      print "."
-    end
-    @maximum_pages.times do |page_index|
-      snapshot_list = get_raw_list_from_api(@base_url + '/*', page_index)
-      break if snapshot_list.empty?
-      snapshot_list_to_consider += snapshot_list
-      print "."
+      @maximum_pages.times do |page_index|
+        snapshot_list = get_raw_list_from_api(@base_url + '/*', page_index)
+        break if snapshot_list.empty?
+        snapshot_list_to_consider += snapshot_list
+        print "."
+      end
     end
     puts " found #{snapshot_list_to_consider.lines.count} snaphots to consider."
     puts
