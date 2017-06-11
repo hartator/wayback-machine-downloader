@@ -58,7 +58,7 @@ end.parse!
 if (base_url = ARGV[-1])
   options[:base_url] = base_url
   wayback_machine_downloader = WaybackMachineDownloader.new options
-  if wayback_machine_downloader.list
+  if options[:list]
     wayback_machine_downloader.list_files
   else
     wayback_machine_downloader.download_files

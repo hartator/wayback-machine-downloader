@@ -60,7 +60,7 @@ module TibyBytes
       bytes.each_index do |i|
 
         byte          = bytes[i]
-        is_ascii      = byte < 128
+        _is_ascii     = byte < 128
         is_cont       = byte > 127 && byte < 192
         is_lead       = byte > 191 && byte < 245
         is_unused     = byte > 240
@@ -78,7 +78,7 @@ module TibyBytes
             # the leading byte.
             begin
               (1..(i - last_lead)).each {|j| bytes[i - j] = tidy_byte(bytes[i - j])}
-            rescue NoMethodError => e
+            rescue NoMethodError
               next
             end
             conts_expected = 0
@@ -98,7 +98,7 @@ module TibyBytes
       end
       begin
         bytes.empty? ? nil : bytes.flatten.compact.pack("C*").unpack("U*").pack("U*")
-      rescue ArgumentError => e
+      rescue ArgumentError
         nil
       end
     end

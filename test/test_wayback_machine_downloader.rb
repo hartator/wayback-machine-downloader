@@ -4,7 +4,8 @@ require 'wayback_machine_downloader'
 class WaybackMachineDownloaderTest < Minitest::Test
 
   def setup
-    @wayback_machine_downloader = WaybackMachineDownloader.new base_url: 'http://www.onlyfreegames.net'
+    @wayback_machine_downloader = WaybackMachineDownloader.new(
+      base_url: 'http://www.onlyfreegames.net')
     $stdout = StringIO.new
   end
 
@@ -36,6 +37,16 @@ class WaybackMachineDownloaderTest < Minitest::Test
       file_id: "strat.html"
     }
     assert_equal file_expected, @wayback_machine_downloader.get_file_list_by_timestamp[-2]
+  end
+
+  def test_without_exact_match
+    @wayback_machine_downloader.exact_match = false
+    assert @wayback_machine_downloader.get_file_list_curated.size > 1
+  end
+
+  def test_exact_match
+    @wayback_machine_downloader.exact_match = true
+    assert_equal 1, @wayback_machine_downloader.get_file_list_curated.size
   end
 
   def test_file_list_only_filter_without_matches
@@ -85,20 +96,22 @@ class WaybackMachineDownloaderTest < Minitest::Test
     assert_nil @wayback_machine_downloader.get_file_list_curated["linux.htm"]
   end
 
-  def test_file_list_exclude_filter_with_a_regex
+  def test_all_get_file_list_curated_size
     @wayback_machine_downloader.all = true
     assert_equal 69, @wayback_machine_downloader.get_file_list_curated.size
   end
  
   # Testing encoding conflicts needs a different base_url
   def test_nonascii_suburls_download
-    @wayback_machine_downloader = WaybackMachineDownloader.new base_url: 'https://en.wikipedia.org/wiki/%C3%84'
+    @wayback_machine_downloader = WaybackMachineDownloader.new(
+      base_url: 'https://en.wikipedia.org/wiki/%C3%84')
     # Once just for the downloading...
     @wayback_machine_downloader.download_files
   end
 
   def test_nonascii_suburls_already_present
-    @wayback_machine_downloader = WaybackMachineDownloader.new base_url: 'https://en.wikipedia.org/wiki/%C3%84'
+    @wayback_machine_downloader = WaybackMachineDownloader.new(
+      base_url: 'https://en.wikipedia.org/wiki/%C3%84')
     # ... twice to test the "is already present" case
     @wayback_machine_downloader.download_files
     @wayback_machine_downloader.download_files
