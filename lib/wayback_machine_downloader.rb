@@ -139,7 +139,6 @@ class WaybackMachineDownloader
   def list_files
     # retrieval produces its own output
     files = get_file_list_by_timestamp
-    # ... hence delay printing the opening bracket
     puts "["
     files.each do |file|
       puts file.to_json + ","
