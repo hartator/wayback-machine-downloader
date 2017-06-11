@@ -17,8 +17,8 @@ class WaybackMachineDownloader
   VERSION = "2.0.0"
 
   attr_accessor :base_url, :exact_match, :directory,
-    :from_timestamp, :to_timestamp,
-    :only_filter, :exclude_filter, :all, :maximum_pages, :threads_count
+    :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, 
+    :all, :maximum_pages, :threads_count
 
   def initialize params
     @base_url = params[:base_url]
