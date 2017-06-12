@@ -26,8 +26,8 @@ option_parser = OptionParser.new do |opts|
     options[:to_timestamp] = t
   end
 
-  opts.on("-e", "--exact_url", String, "Download only the url provied and not the full site") do |t|
-    options[:only_filter] = t
+  opts.on("-e", "--exact-url", "Download only the url provied and not the full site") do |t|
+    options[:exact_url] = t
   end
 
   opts.on("-o", "--only ONLY_FILTER", String, "Restrict downloading to urls that match this filter", "(use // notation for the filter to be treated as a regex)") do |t|
