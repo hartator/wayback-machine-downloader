@@ -14,7 +14,7 @@ class WaybackMachineDownloader
 
   include ArchiveAPI
 
-  VERSION = "2.0.0"
+  VERSION = "2.1.0"
 
   attr_accessor :base_url, :exact_url, :directory,
     :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, 
