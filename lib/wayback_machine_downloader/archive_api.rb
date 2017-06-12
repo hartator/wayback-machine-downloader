@@ -1,15 +1,15 @@
 module ArchiveAPI
 
-	def get_raw_list_from_api url, page_index
-		request_url = "http://web.archive.org/cdx/search/xd?url="
-		request_url += url
-		request_url += parameters_for_api page_index
+  def get_raw_list_from_api url, page_index
+    request_url = "http://web.archive.org/cdx/search/xd?url="
+    request_url += url
+    request_url += parameters_for_api page_index
 
     open(request_url).read
-	end
+  end
 
-	def parameters_for_api page_index
-		parameters = "&fl=timestamp,original&collapse=digest&gzip=false"
+  def parameters_for_api page_index
+    parameters = "&fl=timestamp,original&collapse=digest&gzip=false"
     if @all
       parameters += ""
     else
