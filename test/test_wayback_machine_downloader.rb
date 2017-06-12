@@ -39,13 +39,13 @@ class WaybackMachineDownloaderTest < Minitest::Test
     assert_equal file_expected, @wayback_machine_downloader.get_file_list_by_timestamp[-2]
   end
 
-  def test_without_exact_match
-    @wayback_machine_downloader.exact_match = false
+  def test_without_exact_url
+    @wayback_machine_downloader.exact_url = false
     assert @wayback_machine_downloader.get_file_list_curated.size > 1
   end
 
-  def test_exact_match
-    @wayback_machine_downloader.exact_match = true
+  def test_exact_url
+    @wayback_machine_downloader.exact_url = true
     assert_equal 1, @wayback_machine_downloader.get_file_list_curated.size
   end
 
