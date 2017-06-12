@@ -26,6 +26,10 @@ option_parser = OptionParser.new do |opts|
     options[:to_timestamp] = t
   end
 
+  opts.on("-e", "--exact_url", String, "Download only the url provied and not the full site") do |t|
+    options[:only_filter] = t
+  end
+
   opts.on("-o", "--only ONLY_FILTER", String, "Restrict downloading to urls that match this filter", "(use // notation for the filter to be treated as a regex)") do |t|
     options[:only_filter] = t
   end
@@ -42,11 +46,11 @@ option_parser = OptionParser.new do |opts|
     options[:threads_count] = t
   end
 
-  opts.on("-p", "--maximum-snapshot NUMBER", Integer, "Maximum snapshot pages to consider (Default is 100)", "Count an average of 150,000 snapshots per page ") do |t|
+  opts.on("-p", "--maximum-snapshot NUMBER", Integer, "Maximum snapshot pages to consider (Default is 100)", "Count an average of 150,000 snapshots per page") do |t|
     options[:maximum_pages] = t
   end
 
-  opts.on("-l", "--list", "Only list file urls in a JSON format with the archived timestamps, won't download anything.") do |t|
+  opts.on("-l", "--list", "Only list file urls in a JSON format with the archived timestamps, won't download anything") do |t|
     options[:list] = true
   end
 
