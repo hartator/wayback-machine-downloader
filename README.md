@@ -35,7 +35,7 @@ It will download the last version of every file present on Wayback Machine to `.
 					     Default is ./websites/ plus the domain name
 	    -f, --from TIMESTAMP             Only files on or after timestamp supplied (ie. 20060716231334)
 	    -t, --to TIMESTAMP               Only files on or before timestamp supplied (ie. 20100916231334)
-	    -e, --exact_url                  Download only the url provied and not the full site
+	    -e, --exact-url                  Download only the url provied and not the full site
 	    -o, --only ONLY_FILTER           Restrict downloading to urls that match this filter
 					     (use // notation for the filter to be treated as a regex)
 	    -x, --exclude EXCLUDE_FILTER     Skip downloading of urls that match this filter
@@ -47,9 +47,6 @@ It will download the last version of every file present on Wayback Machine to `.
 					     Count an average of 150,000 snapshots per page
 	    -l, --list                       Only list file urls in a JSON format with the archived timestamps, won't download anything
 	    -v, --version                    Display version
-
-
-
 	    
 ## Specify directory to save files to
 
@@ -85,13 +82,13 @@ Example:
     
 ## Exact Url
 
-	-e, --exact_url 
+	-e, --exact-url 
 
 Optional. If you want to retrieve only the file matching exactly the url provided, you can use this flag. It will avoid downloading anything else.
 
 For example, if you only want to download only the html homepage file of example.com:
 
-    wayback_machine_downloader http://example.com --exact_url 
+    wayback_machine_downloader http://example.com --exact-url 
 
 
 ## Only URL Filter
