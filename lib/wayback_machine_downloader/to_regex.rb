@@ -25,7 +25,7 @@ module ToRegex
     # @option options [true,false] :lang /foo/[nesu]
     def to_regex(options = {})
       if args = as_regexp(options)
-        ::Regexp.new *args
+        ::Regexp.new(*args)
       end
     end
 

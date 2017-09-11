@@ -14,19 +14,21 @@ class WaybackMachineDownloader
 
   include ArchiveAPI
 
-  VERSION = "1.1.4"
+  VERSION = "2.1.1"
 
-  attr_accessor :base_url, :directory, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, :all, :list, :maximum_pages, :threads_count
+  attr_accessor :base_url, :exact_url, :directory,
+    :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, 
+    :all, :maximum_pages, :threads_count
 
   def initialize params
     @base_url = params[:base_url]
+    @exact_url = params[:exact_url]
     @directory = params[:directory]
     @from_timestamp = params[:from_timestamp].to_i
     @to_timestamp = params[:to_timestamp].to_i
     @only_filter = params[:only_filter]
     @exclude_filter = params[:exclude_filter]
     @all = params[:all]
-    @list = params[:list]
     @maximum_pages = params[:maximum_pages] ? params[:maximum_pages].to_i : 100
     @threads_count = params[:threads_count].to_i
   end
@@ -78,18 +80,19 @@ class WaybackMachineDownloader
   end
 
   def get_all_snapshots_to_consider
-    # Note: Passing a page index parameter allow us to get more snapshots, but from a less fresh index
+    # Note: Passing a page index parameter allow us to get more snapshots,
+    # but from a less fresh index
     print "Getting snapshot pages"
     snapshot_list_to_consider = ""
     snapshot_list_to_consider += get_raw_list_from_api(@base_url, nil)
     print "."
-    snapshot_list_to_consider += get_raw_list_from_api(@base_url + '/*', nil)
-    print "."
-    @maximum_pages.times do |page_index|
-      snapshot_list = get_raw_list_from_api(@base_url + '/*', page_index)
-      break if snapshot_list.empty?
-      snapshot_list_to_consider += snapshot_list
-      print "."
+    unless @exact_url
+      @maximum_pages.times do |page_index|
+        snapshot_list = get_raw_list_from_api(@base_url + '/*', page_index)
+        break if snapshot_list.empty?
+        snapshot_list_to_consider += snapshot_list
+        print "."
+      end
     end
     puts " found #{snapshot_list_to_consider.lines.count} snaphots to consider."
     puts
@@ -134,8 +137,10 @@ class WaybackMachineDownloader
   end
 
   def list_files
+    # retrieval produces its own output
+    files = get_file_list_by_timestamp
     puts "["
-    get_file_list_by_timestamp.each do |file|
+    files.each do |file|
       puts file.to_json + ","
     end
     puts "]"
@@ -179,7 +184,7 @@ class WaybackMachineDownloader
 
   def structure_dir_path dir_path
     begin
-      FileUtils::mkdir_p dir_path unless File.exists? dir_path
+      FileUtils::mkdir_p dir_path unless File.exist? dir_path
     rescue Errno::EEXIST => e
       error_to_string = e.to_s
       puts "# #{error_to_string}"
@@ -201,7 +206,8 @@ class WaybackMachineDownloader
   end
 
   def download_file file_remote_info
-    file_url = file_remote_info[:file_url]
+    current_encoding = "".encoding
+    file_url = file_remote_info[:file_url].encode(current_encoding)
     file_id = file_remote_info[:file_id]
     file_timestamp = file_remote_info[:timestamp]
     file_path_elements = file_id.split('/')
@@ -218,7 +224,7 @@ class WaybackMachineDownloader
     if Gem.win_platform?
       file_path = file_path.gsub(/[:*?&=<>\\|]/) {|s| '%' + s.ord.to_s(16) }
     end
-    unless File.exists? file_path
+    unless File.exist? file_path
       begin
         structure_dir_path dir_path
         open(file_path, "wb") do |file|
@@ -239,7 +245,7 @@ class WaybackMachineDownloader
       rescue StandardError => e
         puts "#{file_url} # #{e}"
       ensure
-        if not @all and File.exists?(file_path) and File.size(file_path) == 0
+        if not @all and File.exist?(file_path) and File.size(file_path) == 0
           File.delete(file_path)
           puts "#{file_path} was empty and was removed."
         end

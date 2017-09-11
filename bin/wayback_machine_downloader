@@ -14,7 +14,7 @@ option_parser = OptionParser.new do |opts|
   opts.separator ""
   opts.separator "Optional options:"
 
-  opts.on("-d", "--directory PATH", String, "Directory to save the downloaded files into\n\t\t\t\t     Default is ./websites/ plus the domain name") do |t|
+  opts.on("-d", "--directory PATH", String, "Directory to save the downloaded files into", "Default is ./websites/ plus the domain name") do |t|
     options[:directory] = t
   end
 
@@ -26,11 +26,15 @@ option_parser = OptionParser.new do |opts|
     options[:to_timestamp] = t
   end
 
-  opts.on("-o", "--only ONLY_FILTER", String, "Restrict downloading to urls that match this filter\n\t\t\t\t     (use // notation for the filter to be treated as a regex)") do |t|
+  opts.on("-e", "--exact-url", "Download only the url provied and not the full site") do |t|
+    options[:exact_url] = t
+  end
+
+  opts.on("-o", "--only ONLY_FILTER", String, "Restrict downloading to urls that match this filter", "(use // notation for the filter to be treated as a regex)") do |t|
     options[:only_filter] = t
   end
 
-  opts.on("-x", "--exclude EXCLUDE_FILTER", String, "Skip downloading of urls that match this filter\n\t\t\t\t     (use // notation for the filter to be treated as a regex)") do |t|
+  opts.on("-x", "--exclude EXCLUDE_FILTER", String, "Skip downloading of urls that match this filter", "(use // notation for the filter to be treated as a regex)") do |t|
     options[:exclude_filter] = t
   end
 
@@ -38,15 +42,15 @@ option_parser = OptionParser.new do |opts|
     options[:all] = true
   end
 
-  opts.on("-c", "--concurrency NUMBER", Integer, "Number of multiple files to dowload at a time\n\t\t\t\t     Default is one file at a time (ie. 20)") do |t|
+  opts.on("-c", "--concurrency NUMBER", Integer, "Number of multiple files to dowload at a time", "Default is one file at a time (ie. 20)") do |t|
     options[:threads_count] = t
   end
 
-  opts.on("-p", "--maximum-snapshot NUMBER", Integer, "Maximum snapshot pages to consider (Default is 100)\n\t\t\t\t     Count an average of 150,000 snapshots per page ") do |t|
+  opts.on("-p", "--maximum-snapshot NUMBER", Integer, "Maximum snapshot pages to consider (Default is 100)", "Count an average of 150,000 snapshots per page") do |t|
     options[:maximum_pages] = t
   end
 
-  opts.on("-l", "--list", "Only list file urls in a JSON format with the archived timestamps, won't download anything.") do |t|
+  opts.on("-l", "--list", "Only list file urls in a JSON format with the archived timestamps, won't download anything") do |t|
     options[:list] = true
   end
 
@@ -58,7 +62,7 @@ end.parse!
 if (base_url = ARGV[-1])
   options[:base_url] = base_url
   wayback_machine_downloader = WaybackMachineDownloader.new options
-  if wayback_machine_downloader.list
+  if options[:list]
     wayback_machine_downloader.list_files
   else
     wayback_machine_downloader.download_files
