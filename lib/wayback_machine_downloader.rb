@@ -16,17 +16,17 @@ class WaybackMachineDownloader
 
   VERSION = "1.1.4"
 
-  attr_accessor :base_url, :directory, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, :all, :list, :maximum_pages, :threads_count
+  attr_accessor :base_url, :directory, :all_timestamps, :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, :all, :list, :maximum_pages, :threads_count
 
   def initialize params
     @base_url = params[:base_url]
     @directory = params[:directory]
+    @all_timestamps = params[:all_timestamps]
     @from_timestamp = params[:from_timestamp].to_i
     @to_timestamp = params[:to_timestamp].to_i
     @only_filter = params[:only_filter]
     @exclude_filter = params[:exclude_filter]
     @all = params[:all]
-    @all_timestamps = params[:all_timestamps]
     @list = params[:list]
     @maximum_pages = params[:maximum_pages] ? params[:maximum_pages].to_i : 100
     @threads_count = params[:threads_count].to_i
@@ -124,20 +124,17 @@ class WaybackMachineDownloader
     end
     file_list_curated
   end
-  def get_file_list_ALL
+
+  def get_file_list_all_timestamps
     file_list_curated = Hash.new
-    puts "snapshots_to_consider: " + get_all_snapshots_to_consider.lines.count.to_s
     get_all_snapshots_to_consider.each_line do |line|
-      unless line.include?('/')
-        print "**" + line
-	next
-      end
+      next unless line.include?('/')
       file_timestamp = line[0..13].to_i
       file_url = line[15..-2]
       file_id = file_url.split('/')[3..-1].join('/')
-      file_id = [file_timestamp, file_id].join('/')
-      file_id = CGI::unescape file_id 
-      file_id = file_id.tidy_bytes unless file_id == ""
+      file_id_and_timestamp = [file_timestamp, file_id].join('/')
+      file_id_and_timestamp = CGI::unescape file_id_and_timestamp 
+      file_id_and_timestamp = file_id_and_timestamp.tidy_bytes unless file_id_and_timestamp == ""
       if file_id.nil?
         puts "Malformed file url, ignoring: #{file_url}"
       else
@@ -145,10 +142,10 @@ class WaybackMachineDownloader
           puts "File url matches exclude filter, ignoring: #{file_url}"
         elsif not match_only_filter(file_url)
           puts "File url doesn't match only filter, ignoring: #{file_url}"
-        elsif file_list_curated[file_id]
-         #puts "__" + file_id
+        elsif file_list_curated[file_id_and_timestamp]
+          puts "Duplicate file and timestamp combo, ignoring: #{file_id}" if @verbose
         else
-          file_list_curated[file_id] = {file_url: file_url, timestamp: file_timestamp}
+          file_list_curated[file_id_and_timestamp] = {file_url: file_url, timestamp: file_timestamp}
         end
       end
     end
@@ -159,7 +156,7 @@ class WaybackMachineDownloader
 
   def get_file_list_by_timestamp
     if @all_timestamps
-      file_list_curated = get_file_list_ALL
+      file_list_curated = get_file_list_all_timestamps
       file_list_curated.map do |file_remote_info|
         file_remote_info[1][:file_id] = file_remote_info[0]
         file_remote_info[1]
