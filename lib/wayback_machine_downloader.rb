@@ -260,6 +260,7 @@ class WaybackMachineDownloader
       file_path = backup_path + file_path_elements[0..-1].join('/')
     end
     if Gem.win_platform?
+      dir_path = dir_path.gsub(/[:*?&=<>\\|]/) {|s| '%' + s.ord.to_s(16) }
       file_path = file_path.gsub(/[:*?&=<>\\|]/) {|s| '%' + s.ord.to_s(16) }
     end
     unless File.exist? file_path
