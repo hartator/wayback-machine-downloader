@@ -62,7 +62,7 @@ Example:
 
     -s, --all-timestamps 
 
-Optional. This option will download all timestamps/snapshots for a given website. It will uses the timepstamp of each snapshot as directories.
+Optional. This option will download all timestamps/snapshots for a given website. It will uses the timepstamp of each snapshot as directory.
 
 Example:
 
@@ -70,9 +70,9 @@ Example:
     
     Will download:
     	websites/example.com/20060715085250/index.html
-	websites/example.com/20051120005053/index.html
-	websites/example.com/20060111095815/img/logo.png
-	...
+    	websites/example.com/20051120005053/index.html
+    	websites/example.com/20060111095815/img/logo.png
+    	...
 
 ## From Timestamp
 
