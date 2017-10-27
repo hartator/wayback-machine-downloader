@@ -18,6 +18,10 @@ option_parser = OptionParser.new do |opts|
     options[:directory] = t
   end
 
+  opts.on("-s", "--all-timestamps", "Download all snapshots/timestamps for a given website") do |t|
+    options[:all_timestamps] = true
+  end
+  
   opts.on("-f", "--from TIMESTAMP", Integer, "Only files on or after timestamp supplied (ie. 20060716231334)") do |t|
     options[:from_timestamp] = t
   end

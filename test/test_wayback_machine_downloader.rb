@@ -85,6 +85,11 @@ class WaybackMachineDownloaderTest < Minitest::Test
     assert_includes linux_page.read, "Linux Games"
   end
 
+  def test_all_timestamps_being_respected
+    @wayback_machine_downloader.all_timestamps = true
+    assert_equal 68, @wayback_machine_downloader.get_file_list_curated.size
+  end
+
   def test_from_timestamp_being_respected
     @wayback_machine_downloader.from_timestamp = 20050716231334
     file_url = @wayback_machine_downloader.get_file_list_curated["linux.htm"][:file_url]

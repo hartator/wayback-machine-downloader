@@ -16,7 +16,7 @@ class WaybackMachineDownloader
 
   VERSION = "2.1.1"
 
-  attr_accessor :base_url, :exact_url, :directory,
+  attr_accessor :base_url, :exact_url, :directory, :all_timestamps
     :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, 
     :all, :maximum_pages, :threads_count
 
@@ -24,6 +24,7 @@ class WaybackMachineDownloader
     @base_url = params[:base_url]
     @exact_url = params[:exact_url]
     @directory = params[:directory]
+    @all_timestamps = params[:all_timestamps]
     @from_timestamp = params[:from_timestamp].to_i
     @to_timestamp = params[:to_timestamp].to_i
     @only_filter = params[:only_filter]
@@ -127,12 +128,49 @@ class WaybackMachineDownloader
     file_list_curated
   end
 
+  def get_file_list_all_timestamps
+    file_list_curated = Hash.new
+    get_all_snapshots_to_consider.each_line do |line|
+      next unless line.include?('/')
+      file_timestamp = line[0..13].to_i
+      file_url = line[15..-2]
+      file_id = file_url.split('/')[3..-1].join('/')
+      file_id_and_timestamp = [file_timestamp, file_id].join('/')
+      file_id_and_timestamp = CGI::unescape file_id_and_timestamp 
+      file_id_and_timestamp = file_id_and_timestamp.tidy_bytes unless file_id_and_timestamp == ""
+      if file_id.nil?
+        puts "Malformed file url, ignoring: #{file_url}"
+      else
+        if match_exclude_filter(file_url)
+          puts "File url matches exclude filter, ignoring: #{file_url}"
+        elsif not match_only_filter(file_url)
+          puts "File url doesn't match only filter, ignoring: #{file_url}"
+        elsif file_list_curated[file_id_and_timestamp]
+          puts "Duplicate file and timestamp combo, ignoring: #{file_id}" if @verbose
+        else
+          file_list_curated[file_id_and_timestamp] = {file_url: file_url, timestamp: file_timestamp}
+        end
+      end
+    end
+    puts "file_list_curated: " + file_list_curated.count.to_s
+    file_list_curated
+  end
+
+
   def get_file_list_by_timestamp
-    file_list_curated = get_file_list_curated
-    file_list_curated = file_list_curated.sort_by { |k,v| v[:timestamp] }.reverse
-    file_list_curated.map do |file_remote_info|
-      file_remote_info[1][:file_id] = file_remote_info[0]
-      file_remote_info[1]
+    if @all_timestamps
+      file_list_curated = get_file_list_all_timestamps
+      file_list_curated.map do |file_remote_info|
+        file_remote_info[1][:file_id] = file_remote_info[0]
+        file_remote_info[1]
+      end
+    else
+      file_list_curated = get_file_list_curated
+      file_list_curated = file_list_curated.sort_by { |k,v| v[:timestamp] }.reverse
+      file_list_curated.map do |file_remote_info|
+        file_remote_info[1][:file_id] = file_remote_info[0]
+        file_remote_info[1]
+      end
     end
   end
 
