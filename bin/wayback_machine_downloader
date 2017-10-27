@@ -18,7 +18,7 @@ option_parser = OptionParser.new do |opts|
     options[:directory] = t
   end
 
-  opts.on("-s", "--all-timestamps", "Download all snapshots (ie. all timestamps)") do |t|
+  opts.on("-s", "--all-timestamps", "Download all snapshots/timestamps for a given website") do |t|
     options[:all_timestamps] = true
   end
   
