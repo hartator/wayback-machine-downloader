@@ -14,7 +14,7 @@ class WaybackMachineDownloader
 
   include ArchiveAPI
 
-  VERSION = "2.2.0"
+  VERSION = "2.2.1"
 
   attr_accessor :base_url, :exact_url, :directory, :all_timestamps,
     :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, 
@@ -260,6 +260,7 @@ class WaybackMachineDownloader
       file_path = backup_path + file_path_elements[0..-1].join('/')
     end
     if Gem.win_platform?
+      dir_path = dir_path.gsub(/[:*?&=<>\\|]/) {|s| '%' + s.ord.to_s(16) }
       file_path = file_path.gsub(/[:*?&=<>\\|]/) {|s| '%' + s.ord.to_s(16) }
     end
     unless File.exist? file_path
