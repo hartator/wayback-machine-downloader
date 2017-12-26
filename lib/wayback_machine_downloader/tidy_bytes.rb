@@ -1,4 +1,4 @@
-module TibyBytes
+module TidyBytes
 
   # CP-1252 decimal byte => UTF-8 approximation as an array of bytes
   CP1252 = {
@@ -111,12 +111,12 @@ module TibyBytes
     private
 
     def tidy_byte(byte)
-      byte < 160 ? TibyBytes::CP1252[byte] : byte < 192 ? [194, byte] : [195, byte - 64]
+      byte < 160 ? TidyBytes::CP1252[byte] : byte < 192 ? [194, byte] : [195, byte - 64]
     end
 
   end
 end
 
 class String
-  include TibyBytes::StringMixin
+  include TidyBytes::StringMixin
 end
