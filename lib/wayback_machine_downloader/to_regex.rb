@@ -1,4 +1,6 @@
-module ToRegex
+class WaybackMachineDownloader; end
+
+module WaybackMachineDownloader::ToRegex
   module StringMixin
     class << self
       def literal?(str)
@@ -77,5 +79,5 @@ module ToRegex
 end
 
 class String
-  include ToRegex::StringMixin
+  include WaybackMachineDownloader::ToRegex::StringMixin
 end
