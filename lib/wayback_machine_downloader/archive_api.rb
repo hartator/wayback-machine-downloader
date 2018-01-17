@@ -5,7 +5,7 @@ module ArchiveAPI
     request_url += url
     request_url += parameters_for_api page_index
 
-    open(request_url).read
+    open(URI.escape(request_url)).read
   end
 
   def parameters_for_api page_index
