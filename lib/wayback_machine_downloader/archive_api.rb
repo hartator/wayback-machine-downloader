@@ -1,11 +1,11 @@
 module ArchiveAPI
 
   def get_raw_list_from_api url, page_index
-    request_url = "http://web.archive.org/cdx/search/xd?url="
+    request_url = "https://web.archive.org/cdx/search/xd?url="
     request_url += url
     request_url += parameters_for_api page_index
 
-    open(request_url).read
+    URI.open(request_url).read
   end
 
   def parameters_for_api page_index
