@@ -58,6 +58,10 @@ option_parser = OptionParser.new do |opts|
     options[:list] = true
   end
 
+  opts.on("-u", "--user-agent STRING", String, "UserAgent for connection (Default is WayBack Machine Downloader)") do |t|
+    options[:user_agent] = t
+  end
+
   opts.on("-v", "--version", "Display version") do |t|
     options[:version] = t
   end

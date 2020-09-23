@@ -18,7 +18,7 @@ class WaybackMachineDownloader
 
   attr_accessor :base_url, :exact_url, :directory, :all_timestamps,
     :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, 
-    :all, :maximum_pages, :threads_count
+    :all, :maximum_pages, :threads_count, :user_agent
 
   def initialize params
     @base_url = params[:base_url]
@@ -32,6 +32,7 @@ class WaybackMachineDownloader
     @all = params[:all]
     @maximum_pages = params[:maximum_pages] ? params[:maximum_pages].to_i : 100
     @threads_count = params[:threads_count].to_i
+    @user_agent = params[:user_agent] ? params[:user_agent] : "WayBack Machine Downloader"
   end
 
   def backup_name
@@ -268,7 +269,7 @@ class WaybackMachineDownloader
         structure_dir_path dir_path
         open(file_path, "wb") do |file|
           begin
-            URI.open("https://web.archive.org/web/#{file_timestamp}id_/#{file_url}", "Accept-Encoding" => "plain") do |uri|
+            open("http://web.archive.org/web/#{file_timestamp}id_/#{file_url}", "Accept-Encoding" => "plain", "User-Agent" => @user_agent) do |uri|
               file.write(uri.read)
             end
           rescue OpenURI::HTTPError => e
