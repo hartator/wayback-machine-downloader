@@ -32,7 +32,7 @@ class WaybackMachineDownloader
     @all = params[:all]
     @maximum_pages = params[:maximum_pages] ? params[:maximum_pages].to_i : 100
     @threads_count = params[:threads_count].to_i
-    @user_agent = params[:user_agent] ? params[:user_agent] : "WayBack Machine Downloader"
+    @user_agent = params[:user_agent] ? params[:user_agent] : "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0"
   end
 
   def backup_name
