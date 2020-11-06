@@ -47,7 +47,7 @@ It will download the last version of every file present on Wayback Machine to `.
 	    -p, --maximum-snapshot NUMBER    Maximum snapshot pages to consider (Default is 100)
 					     Count an average of 150,000 snapshots per page
 	    -l, --list                       Only list file urls in a JSON format with the archived timestamps, won't download anything
-	    -u, --user-agent STRING          UserAgent for connection (Default is WayBack Machine Downloader)
+	    -u, --user-agent STRING          UserAgent for connection (Default is Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0)
 	    
 ## Specify directory to save files to
 
@@ -180,11 +180,11 @@ Example:
 
      -u, --user-agent STRING
 
-UserAgent for connection (Default is WayBack Machine Downloader)
+UserAgent for connection (Default is Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0)
 
 Example:
 
-    wayback_machine_downloader http://example.com --user-agent "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:77.0) Gecko/20190101 Firefox/77.0"
+    wayback_machine_downloader http://example.com --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36"
 
 ## Using the Docker image
 
