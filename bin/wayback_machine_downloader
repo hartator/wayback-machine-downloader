@@ -58,6 +58,10 @@ option_parser = OptionParser.new do |opts|
     options[:list] = true
   end
 
+  opts.on("-u", "--user-agent STRING", String, "UserAgent for connection (Default is Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0)") do |t|
+    options[:user_agent] = t
+  end
+
   opts.on("-v", "--version", "Display version") do |t|
     options[:version] = t
   end
