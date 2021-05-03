@@ -177,9 +177,10 @@ class WaybackMachineDownloader
     files = get_file_list_by_timestamp
     $stdout = @orig_stdout
     puts "["
-    files.each do |file|
+    files[0...-1].each do |file|
       puts file.to_json + ","
     end
+    puts files[-1].to_json
     puts "]"
   end
 
