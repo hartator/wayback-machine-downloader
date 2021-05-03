@@ -70,7 +70,7 @@ module TibyBytes
         if is_unused || is_restricted
           bytes[i] = tidy_byte(byte)
         elsif is_cont
-          # Not expecting contination byte? Clean up. Otherwise, now expect one less.
+          # Not expecting continuation byte? Clean up. Otherwise, now expect one less.
           conts_expected == 0 ? bytes[i] = tidy_byte(byte) : conts_expected -= 1
         else
           if conts_expected > 0
