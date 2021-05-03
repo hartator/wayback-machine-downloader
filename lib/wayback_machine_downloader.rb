@@ -172,7 +172,10 @@ class WaybackMachineDownloader
 
   def list_files
     # retrieval produces its own output
+    @orig_stdout = $stdout
+    $stdout = $stderr
     files = get_file_list_by_timestamp
+    $stdout = @orig_stdout
     puts "["
     files.each do |file|
       puts file.to_json + ","
