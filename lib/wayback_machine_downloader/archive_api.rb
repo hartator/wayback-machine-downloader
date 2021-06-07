@@ -10,7 +10,7 @@ module ArchiveAPI
     request_url.query = URI.encode_www_form(params)
 
     begin
-      json = JSON.parse(URI.open(request_url).read)
+      json = JSON.parse(URI(request_url).open.read)
       if (json[0] <=> ["timestamp","original"]) == 0
         json.shift
       end
