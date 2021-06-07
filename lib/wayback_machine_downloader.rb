@@ -134,7 +134,7 @@ class WaybackMachineDownloader
       file_id_and_timestamp = [file_timestamp, file_id].join('/')
       file_id_and_timestamp = CGI::unescape file_id_and_timestamp 
       file_id_and_timestamp = file_id_and_timestamp.tidy_bytes unless file_id_and_timestamp == ""
-      if file_id.nil?
+      if file_id_and_timestamp.nil?
         puts "Malformed file url, ignoring: #{file_url}"
       else
         if match_exclude_filter(file_url)
