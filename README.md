@@ -42,7 +42,7 @@ It will download the last version of every file present on Wayback Machine to `.
 	    -x, --exclude EXCLUDE_FILTER     Skip downloading of urls that match this filter
 					     (use // notation for the filter to be treated as a regex)
 	    -a, --all                        Expand downloading to error files (40x and 50x) and redirections (30x)
-	    -c, --concurrency NUMBER         Number of multiple files to dowload at a time
+	    -c, --concurrency NUMBER         Number of multiple files to download at a time
 					     Default is one file at a time (ie. 20)
 	    -p, --maximum-snapshot NUMBER    Maximum snapshot pages to consider (Default is 100)
 					     Count an average of 150,000 snapshots per page
@@ -62,7 +62,7 @@ Example:
 
     -s, --all-timestamps 
 
-Optional. This option will download all timestamps/snapshots for a given website. It will uses the timepstamp of each snapshot as directory.
+Optional. This option will download all timestamps/snapshots for a given website. It will uses the timestamp of each snapshot as directory.
 
 Example:
 
@@ -78,7 +78,7 @@ Example:
 
     -f, --from TIMESTAMP
 
-Optional. You may want to supply a from timestamp to lock your backup to a specific version of the website. Timestamps can be found inside the urls of the regular Wayback Machine website (e.g., http://web.archive.org/web/20060716231334/http://example.com). You can also use years (2006), years + month (200607), etc. It can be used in combination of To Timestamp.
+Optional. You may want to supply a from timestamp to lock your backup to a specific version of the website. Timestamps can be found inside the urls of the regular Wayback Machine website (e.g., https://web.archive.org/web/20060716231334/http://example.com). You can also use years (2006), years + month (200607), etc. It can be used in combination of To Timestamp.
 Wayback Machine Downloader will then fetch only file versions on or after the timestamp specified.
 
 Example:
@@ -89,7 +89,7 @@ Example:
 
     -t, --to TIMESTAMP
 
-Optional. You may want to supply a to timestamp to lock your backup to a specifc version of the website. Timestamps can be found inside the urls of the regular Wayback Machine website (e.g., http://web.archive.org/web/20100916231334/http://example.com). You can also use years (2010), years + month (201009), etc. It can be used in combination of From Timestamp.
+Optional. You may want to supply a to timestamp to lock your backup to a specific version of the website. Timestamps can be found inside the urls of the regular Wayback Machine website (e.g., https://web.archive.org/web/20100916231334/http://example.com). You can also use years (2010), years + month (201009), etc. It can be used in combination of From Timestamp.
 Wayback Machine Downloader will then fetch only file versions on or before the timestamp specified.
 
 Example:
@@ -169,7 +169,7 @@ Example:
 
     -c, --concurrency NUMBER  
 
-Optional. Specify the number of multiple files you want to download at the same time. Allows to speed up the download of a website significantly. Default is to download one file at a time.
+Optional. Specify the number of multiple files you want to download at the same time. Allows one to speed up the download of a website significantly. Default is to download one file at a time.
 
 Example:
 

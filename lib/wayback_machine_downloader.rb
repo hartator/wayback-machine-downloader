@@ -14,7 +14,7 @@ class WaybackMachineDownloader
 
   include ArchiveAPI
 
-  VERSION = "2.2.1"
+  VERSION = "2.3.0"
 
   attr_accessor :base_url, :exact_url, :directory, :all_timestamps,
     :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, 
@@ -84,7 +84,7 @@ class WaybackMachineDownloader
     # Note: Passing a page index parameter allow us to get more snapshots,
     # but from a less fresh index
     print "Getting snapshot pages"
-    snapshot_list_to_consider = ""
+    snapshot_list_to_consider = []
     snapshot_list_to_consider += get_raw_list_from_api(@base_url, nil)
     print "."
     unless @exact_url
@@ -95,17 +95,15 @@ class WaybackMachineDownloader
         print "."
       end
     end
-    puts " found #{snapshot_list_to_consider.lines.count} snaphots to consider."
+    puts " found #{snapshot_list_to_consider.length} snaphots to consider."
     puts
     snapshot_list_to_consider
   end
 
   def get_file_list_curated
     file_list_curated = Hash.new
-    get_all_snapshots_to_consider.each_line do |line|
-      next unless line.include?('/')
-      file_timestamp = line[0..13].to_i
-      file_url = line[15..-2]
+    get_all_snapshots_to_consider.each do |file_timestamp, file_url|
+      next unless file_url.include?('/')
       file_id = file_url.split('/')[3..-1].join('/')
       file_id = CGI::unescape file_id 
       file_id = file_id.tidy_bytes unless file_id == ""
@@ -130,10 +128,8 @@ class WaybackMachineDownloader
 
   def get_file_list_all_timestamps
     file_list_curated = Hash.new
-    get_all_snapshots_to_consider.each_line do |line|
-      next unless line.include?('/')
-      file_timestamp = line[0..13].to_i
-      file_url = line[15..-2]
+    get_all_snapshots_to_consider.each do |file_timestamp, file_url|
+      next unless file_url.include?('/')
       file_id = file_url.split('/')[3..-1].join('/')
       file_id_and_timestamp = [file_timestamp, file_id].join('/')
       file_id_and_timestamp = CGI::unescape file_id_and_timestamp 
@@ -176,11 +172,15 @@ class WaybackMachineDownloader
 
   def list_files
     # retrieval produces its own output
+    @orig_stdout = $stdout
+    $stdout = $stderr
     files = get_file_list_by_timestamp
+    $stdout = @orig_stdout
     puts "["
-    files.each do |file|
+    files[0...-1].each do |file|
       puts file.to_json + ","
     end
+    puts files[-1].to_json
     puts "]"
   end
 
