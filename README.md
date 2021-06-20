@@ -185,6 +185,24 @@ Then, you should be able to use the Docker image to download websites. For examp
 
     docker run --rm -it -v $PWD/websites:/websites hartator/wayback-machine-downloader http://example.com
 
+## Browse the local copy
+
+Now you have downloaded a local copy of a website from the archive.  If it does not properly load or display in your browser, most likely wrong absolute URLs are part of the problem.  That means, the HTML files reference - for example - a stylesheet at the location it was once hosted (like `https://yourolddomaincontent.com/style.css`).  To have the page served from your local copy, these URLs have to be rewritten to refer to the local content (like `style.css`)
+
+While [a feature request (#26) exists](https://github.com/hartator/wayback-machine-downloader/issues/26), no one implemented it yet.
+
+If you work on a unixoid system, following `sed` command might help you for starters.  The example assumes that the refered domain is `https://yourolddomaincontent.com` and stored in the directory `websites`:
+
+    grep --recursive --files-with-matches 'yourolddomaincontent.com' websites | xargs sed --in-place 's|https\?://yourolddomaincontent.com||g'
+
+Or, with short options:
+
+    grep -rl 'yourolddomaincontent.com' websites | xargs sed -i 's|https\?://yourolddomaincontent.com||g'
+
+However, you might find, that also subdomains like `www.yourolddomaincontent.com` or even URLs with port-information like `www.yourolddomaincontent.com:80` are used.  In that case, adjust the sed call appropriately.
+
+You might still achieve better results when serving the files via a web server than to open them directly with your browser, the list of commands at https://gist.github.com/willurd/5720255 might be a good start to evaluate your options.
+
 ## Contributing
 
 Contributions are welcome! Just submit a pull request via GitHub.
