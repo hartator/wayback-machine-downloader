@@ -157,13 +157,13 @@ Example:
 
 ## Maximum number of snapshot pages to consider
 
-    -p, --snapshot-pages NUMBER    
+    -p, --maximum-snapshot NUMBER    
 
 Optional. Specify the maximum number of snapshot pages to consider. Count an average of 150,000 snapshots per page. 100 is the default maximum number of snapshot pages and should be sufficient for most websites. Use a bigger number if you want to download a very large website.
 
 Example:
 
-    wayback_machine_downloader http://example.com --snapshot-pages 300    
+    wayback_machine_downloader http://example.com --maximum-snapshot 300    
 
 ## Download multiple files at a time
 
