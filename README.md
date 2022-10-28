@@ -36,7 +36,7 @@ It will download the last version of every file present on Wayback Machine to `.
 	    -s, --all-timestamps             Download all snapshots/timestamps for a given website
 	    -f, --from TIMESTAMP             Only files on or after timestamp supplied (ie. 20060716231334)
 	    -t, --to TIMESTAMP               Only files on or before timestamp supplied (ie. 20100916231334)
-	    -e, --exact-url                  Download only the url provied and not the full site
+	    -e, --exact-url                  Download only the url provided and not the full site
 	    -o, --only ONLY_FILTER           Restrict downloading to urls that match this filter
 					     (use // notation for the filter to be treated as a regex)
 	    -x, --exclude EXCLUDE_FILTER     Skip downloading of urls that match this filter
