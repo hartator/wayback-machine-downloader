@@ -6,6 +6,7 @@ require 'open-uri'
 require 'fileutils'
 require 'cgi'
 require 'json'
+require 'time'
 require_relative 'wayback_machine_downloader/tidy_bytes'
 require_relative 'wayback_machine_downloader/to_regex'
 require_relative 'wayback_machine_downloader/archive_api'
@@ -249,6 +250,7 @@ class WaybackMachineDownloader
     file_id = file_remote_info[:file_id]
     file_timestamp = file_remote_info[:timestamp]
     file_path_elements = file_id.split('/')
+    original_file_mtime = nil
     if file_id == ""
       dir_path = backup_path
       file_path = backup_path + 'index.html'
@@ -270,6 +272,9 @@ class WaybackMachineDownloader
           begin
             URI("https://web.archive.org/web/#{file_timestamp}id_/#{file_url}").open("Accept-Encoding" => "plain") do |uri|
               file.write(uri.read)
+              if uri.meta.has_key?("x-archive-orig-last-modified")
+                original_file_mtime = Time.parse(uri.meta["x-archive-orig-last-modified"])
+              end
             end
           rescue OpenURI::HTTPError => e
             puts "#{file_url} # #{e}"
@@ -280,6 +285,9 @@ class WaybackMachineDownloader
           rescue StandardError => e
             puts "#{file_url} # #{e}"
           end
+        end
+        if not original_file_mtime.nil?
+            File.utime(File.atime(file_path), original_file_mtime, file_path)
         end
       rescue StandardError => e
         puts "#{file_url} # #{e}"
