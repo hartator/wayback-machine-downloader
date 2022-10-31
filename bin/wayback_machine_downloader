@@ -30,7 +30,7 @@ option_parser = OptionParser.new do |opts|
     options[:to_timestamp] = t
   end
 
-  opts.on("-e", "--exact-url", "Download only the url provied and not the full site") do |t|
+  opts.on("-e", "--exact-url", "Download only the url provided and not the full site") do |t|
     options[:exact_url] = t
   end
 
