@@ -1,6 +1,6 @@
 # Wayback Machine Downloader
 
-[![Gem Version](https://badge.fury.io/rb/wayback_machine_downloader.svg)](https://rubygems.org/gems/wayback_machine_downloader/)
+[![Backers on Open Collective](https://opencollective.com/wayback-machine-downloader/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/wayback-machine-downloader/sponsors/badge.svg)](#sponsors) [![Gem Version](https://badge.fury.io/rb/wayback_machine_downloader.svg)](https://rubygems.org/gems/wayback_machine_downloader/)
 [![Build Status](https://travis-ci.org/hartator/wayback-machine-downloader.svg?branch=master)](https://travis-ci.org/hartator/wayback-machine-downloader)
 
 Download an entire website from the Internet Archive Wayback Machine.
@@ -193,3 +193,33 @@ To run the tests:
 
     bundle install
     bundle exec rake test
+
+## Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="graphs/contributors"><img src="https://opencollective.com/wayback-machine-downloader/contributors.svg?width=890" /></a>
+
+
+## Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/wayback-machine-downloader#backer)]
+
+<a href="https://opencollective.com/wayback-machine-downloader#backers" target="_blank"><img src="https://opencollective.com/wayback-machine-downloader/backers.svg?width=890"></a>
+
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/wayback-machine-downloader#sponsor)]
+
+<a href="https://opencollective.com/wayback-machine-downloader/sponsor/0/website" target="_blank"><img src="https://opencollective.com/wayback-machine-downloader/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/wayback-machine-downloader/sponsor/1/website" target="_blank"><img src="https://opencollective.com/wayback-machine-downloader/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/wayback-machine-downloader/sponsor/2/website" target="_blank"><img src="https://opencollective.com/wayback-machine-downloader/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/wayback-machine-downloader/sponsor/3/website" target="_blank"><img src="https://opencollective.com/wayback-machine-downloader/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/wayback-machine-downloader/sponsor/4/website" target="_blank"><img src="https://opencollective.com/wayback-machine-downloader/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/wayback-machine-downloader/sponsor/5/website" target="_blank"><img src="https://opencollective.com/wayback-machine-downloader/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/wayback-machine-downloader/sponsor/6/website" target="_blank"><img src="https://opencollective.com/wayback-machine-downloader/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/wayback-machine-downloader/sponsor/7/website" target="_blank"><img src="https://opencollective.com/wayback-machine-downloader/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/wayback-machine-downloader/sponsor/8/website" target="_blank"><img src="https://opencollective.com/wayback-machine-downloader/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/wayback-machine-downloader/sponsor/9/website" target="_blank"><img src="https://opencollective.com/wayback-machine-downloader/sponsor/9/avatar.svg"></a>
+
+
