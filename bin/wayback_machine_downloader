@@ -46,6 +46,10 @@ option_parser = OptionParser.new do |opts|
     options[:all] = true
   end
 
+  opts.on("-n", "--delay DELAY", "A configurable delay between page/file downloads (in seconds) to combat rate limiting. Default is 4 seconds") do |t|
+    options[:delay] = t
+  end
+
   opts.on("-c", "--concurrency NUMBER", Integer, "Number of multiple files to download at a time", "Default is one file at a time (ie. 20)") do |t|
     options[:threads_count] = t
   end

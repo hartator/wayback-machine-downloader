@@ -18,7 +18,7 @@ class WaybackMachineDownloader
 
   attr_accessor :base_url, :exact_url, :directory, :all_timestamps,
     :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, 
-    :all, :maximum_pages, :threads_count
+    :all, :maximum_pages, :threads_count, :delay
 
   def initialize params
     @base_url = params[:base_url]
@@ -30,8 +30,11 @@ class WaybackMachineDownloader
     @only_filter = params[:only_filter]
     @exclude_filter = params[:exclude_filter]
     @all = params[:all]
+    # maximum page default is 100
     @maximum_pages = params[:maximum_pages] ? params[:maximum_pages].to_i : 100
     @threads_count = params[:threads_count].to_i
+    # default delay is 4 seconds
+    @delay = params[:delay] ? params[:delay].to_i : 4
   end
 
   def backup_name
@@ -89,6 +92,8 @@ class WaybackMachineDownloader
     print "."
     unless @exact_url
       @maximum_pages.times do |page_index|
+        # wait before fetching individual snapshots
+        sleep(@delay)
         snapshot_list = get_raw_list_from_api(@base_url + '/*', page_index)
         break if snapshot_list.empty?
         snapshot_list_to_consider += snapshot_list
@@ -209,6 +214,8 @@ class WaybackMachineDownloader
       threads << Thread.new do
         until file_queue.empty?
           file_remote_info = file_queue.pop(true) rescue nil
+          # delay start of download operation for configurable amount of time
+          sleep(@delay)
           download_file(file_remote_info) if file_remote_info
         end
       end
