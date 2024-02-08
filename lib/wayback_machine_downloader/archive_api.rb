@@ -3,14 +3,14 @@ require 'uri'
 
 module ArchiveAPI
 
-  def get_raw_list_from_api url, page_index
+  def get_raw_list_from_api url, page_index, http
     request_url = URI("https://web.archive.org/cdx/search/xd")
     params = [["output", "json"], ["url", url]]
     params += parameters_for_api page_index
     request_url.query = URI.encode_www_form(params)
 
     begin
-      json = JSON.parse(URI(request_url).open.read)
+      json = JSON.parse(http.get(URI(request_url)).body)
       if (json[0] <=> ["timestamp","original"]) == 0
         json.shift
       end
