@@ -301,7 +301,6 @@ class WaybackMachineDownloader
         @processed_file_count += 1
         puts "#{file_url} -> #{file_path} (#{@processed_file_count}/#{file_list_by_timestamp.size})"
       end
-      sleep(3)
     else
       semaphore.synchronize do
         @processed_file_count += 1
