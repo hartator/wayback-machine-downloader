@@ -14,7 +14,7 @@ class WaybackMachineDownloader
 
   include ArchiveAPI
 
-  VERSION = "2.3.1"
+  VERSION = "2.3.2"
 
   attr_accessor :base_url, :exact_url, :directory, :all_timestamps,
     :from_timestamp, :to_timestamp, :only_filter, :exclude_filter, 
@@ -83,18 +83,22 @@ class WaybackMachineDownloader
   def get_all_snapshots_to_consider
     # Note: Passing a page index parameter allow us to get more snapshots,
     # but from a less fresh index
+    http = Net::HTTP.new("web.archive.org", 443)
+    http.use_ssl = true
+    http.start()
     print "Getting snapshot pages"
     snapshot_list_to_consider = []
-    snapshot_list_to_consider += get_raw_list_from_api(@base_url, nil)
+    snapshot_list_to_consider += get_raw_list_from_api(@base_url, nil, http)
     print "."
     unless @exact_url
       @maximum_pages.times do |page_index|
-        snapshot_list = get_raw_list_from_api(@base_url + '/*', page_index)
+        snapshot_list = get_raw_list_from_api(@base_url + '/*', page_index, http)
         break if snapshot_list.empty?
         snapshot_list_to_consider += snapshot_list
         print "."
       end
     end
+    http.finish()
     puts " found #{snapshot_list_to_consider.length} snaphots to consider."
     puts
     snapshot_list_to_consider
@@ -206,11 +210,15 @@ class WaybackMachineDownloader
     @processed_file_count = 0
     @threads_count = 1 unless @threads_count != 0
     @threads_count.times do
+      http = Net::HTTP.new("web.archive.org", 443)
+      http.use_ssl = true
+      http.start()
       threads << Thread.new do
         until file_queue.empty?
           file_remote_info = file_queue.pop(true) rescue nil
-          download_file(file_remote_info) if file_remote_info
+          download_file(file_remote_info, http) if file_remote_info
         end
+        http.finish()
       end
     end
 
@@ -243,7 +251,7 @@ class WaybackMachineDownloader
     end
   end
 
-  def download_file file_remote_info
+  def download_file (file_remote_info, http)
     current_encoding = "".encoding
     file_url = file_remote_info[:file_url].encode(current_encoding)
     file_id = file_remote_info[:file_id]
@@ -268,8 +276,8 @@ class WaybackMachineDownloader
         structure_dir_path dir_path
         open(file_path, "wb") do |file|
           begin
-            URI("https://web.archive.org/web/#{file_timestamp}id_/#{file_url}").open("Accept-Encoding" => "plain") do |uri|
-              file.write(uri.read)
+            http.get(URI("https://web.archive.org/web/#{file_timestamp}id_/#{file_url}")) do |body|
+              file.write(body)
             end
           rescue OpenURI::HTTPError => e
             puts "#{file_url} # #{e}"
